@@ -1,0 +1,11 @@
+AIM-Rpi-Mikronode/node_modules/
+AIM-Rpi-Mikronode/node_modules/**
+AIM-Rpi-Mikronode/dist/
+AIM-Rpi-Mikronode/dist/**
+AIM-Rpi-Mikronode/node_modules
+dist
+test
+.vscode
+.jshintrc
+jsconfig.json
+src/parser.js
