@@ -2,6 +2,8 @@ AIM-Rpi-Mikronode/node_modules/
 AIM-Rpi-Mikronode/node_modules/**
 AIM-Rpi-Mikronode/dist/
 AIM-Rpi-Mikronode/dist/**
+AIM-Rpi-Mikronode/examples/
+AIM-Rpi-Mikronode/examples/**
 AIM-Rpi-Mikronode/node_modules
 dist
 test
