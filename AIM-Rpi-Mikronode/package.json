@@ -1,4 +1,4 @@
-{
+  {
   "name": "mikronode",
   "description": "Mikrotik API implemented in Node",
   "version": "2.3.11",
@@ -46,7 +46,22 @@
     "simple-assign": "^0.1.0",
     "uglify-js": ">=1.2.5",
     "webpack": "^1.13.1",
-    "webpack-dev-server": "^1.15.0"
+    "webpack-dev-server": "^1.15.0",
+    "bcryptjs": "*",
+    "body-parser": "*",
+    "connect-flash": "*",
+    "cookie-parser": "^1.4.1",
+    "express": "*",
+    "express-handlebars": "*",
+    "express-messages": "*",
+    "express-session": "*",
+    "express-validator": "*",
+    "mongodb": "*",
+    "mongoose": "*",
+    "passport": "*",
+    "passport-http": "*",
+    "passport-local": "*",
+    "request": "^2.81.0"
   },
   "peerDependencies": {
     "core-decorators": ">=0.12.3 && <1.0.0",
@@ -58,6 +73,7 @@
   },
   "dependencies": {
     "pegjs": "^0.10.0",
-    "promise": "^8.0.1"
+    "promise": "^8.0.1",
+    "socket.io": "^2.1.1"
   }
 }

@@ -10,3 +10,5 @@ webpack.config.babel.js
 .npmignore
 constants.js
 jsconfig.json
+AIM-Cloud-SLoopAPI/
+../AIM-Cloud**
