@@ -1,4 +1,4 @@
-  {
+{
   "name": "mikronode",
   "description": "Mikrotik API implemented in Node",
   "version": "2.3.11",
@@ -56,8 +56,6 @@
     "express-messages": "*",
     "express-session": "*",
     "express-validator": "*",
-    "mongodb": "*",
-    "mongoose": "*",
     "passport": "*",
     "passport-http": "*",
     "passport-local": "*",
@@ -72,6 +70,7 @@
     "node": ">= 6"
   },
   "dependencies": {
+    "nodemon": "^1.17.5",
     "pegjs": "^0.10.0",
     "promise": "^8.0.1",
     "socket.io": "^2.1.1"

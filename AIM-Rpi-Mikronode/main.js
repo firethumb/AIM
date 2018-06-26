@@ -9,6 +9,7 @@ var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+
 var MikroNode = require('./dist/mikronode.js');
 // Create API instance to a host.
 var device = new MikroNode('192.168.88.1');
@@ -25,12 +26,12 @@ console.log("cba " + val);
 mktkcmd('/ip/hotspot/user/add',{name:'test','limit-uptime':'00:30:00',disabled:'no',profile:'default','limit-bytes-total':'1M'},function(val){
 console.log("cba " + val);
 });
-*/
+
 
 mktkcmd('/ip/hotspot/user/print',"",function(val){
 console.log("cba ", JSON.stringify(val));
 });
-
+*/
 
 console.log("END of Command");
 expressSRV();
@@ -80,14 +81,15 @@ function expressSRV(){
 	 next();
 	 });
 	 app.use('/',routes);
-	 app.use('/users',users);
 	//
 	app.set('port',(process.env.PORT || 3002));
 	app.listen(app.get('port'),function() {
    	console.log('Server started on port ' + app.get('port'));
  	});
 }
-
+var infunc = function(sval){
+  console.log("clicked");
+}
 
 /*
 webserver();
