@@ -86,3 +86,56 @@ body {
 footer{
   margin-top: 40px;
 }
+
+.card {
+  margin-bottom: 1.5rem; }
+*::after {
+  box-sizing: inherit; }
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border: 1px solid #dbdee0; }
+.p-1 {
+  padding: 1rem 1rem !important; }
+.font-4xl {
+  font-size: 2rem !important; }
+.mb-1 {
+  margin-bottom: 1rem !important; }
+.float-left {
+  float: left !important; }
+
+.float-right {
+  float: right !important; }
+
+.float-none {
+  float: none !important; }
+.card-block {
+  flex: 1 1 auto;
+  padding: 1.25rem; }
+.font-2xl {
+  font-size: 1.5rem !important; }
+.float-left {
+  float: left !important; }
+.mr-1 {
+  margin-right: 1rem !important; }
+.bg-success {
+  color: #fff !important;
+  background-color: #bdea74 !important; }
+.bg-primary {
+  color: #fff !important;
+  background-color: #36a9e1 !important; }
+.bg-info {
+  color: #fff !important;
+  background-color: #67c2ef !important; }
+.bg-warning {
+  color: #fff !important;
+  background-color: #fabb3d !important; }
+.bg-danger {
+  color: #fff !important;
+  background-color: #ff5454 !important; }
+.bg-inverse {
+  color: #fff !important;
+  background-color: #34383c !important; }

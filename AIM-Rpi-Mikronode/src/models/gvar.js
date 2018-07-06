@@ -1,6 +1,4 @@
-var express = require('express');
-var indxrouter = express.Router();
-var gvar = (function() {
+module.exports.gvardashboard = function() {
   var rpiIP = "rpiIP0";
   var wlcIP = "wlcIP0";
   var rpiCPUTemp = "rpiCPUTemp0";
@@ -13,7 +11,7 @@ var gvar = (function() {
   function setrpiIP(val) {
     rpiIP = val;
   };
-  function _getrpiIP() {
+  function getrpiIP() {
     return rpiIP;
   };
   function setwlcIP(val) {
@@ -66,14 +64,7 @@ var gvar = (function() {
     }else { return -1; };
   }
   return {
-    rpiIP: {
-      set:function(val) {
-        setrpiIP(val);
-      },
-      get:function(){
-        return 'test';//getrpiIP();
-      }
-    },
+    rpiIP: 'f',
     wlcIP: {
       set:function(val) {
         setwlcIP(val);
@@ -126,17 +117,4 @@ var gvar = (function() {
       }
     }
   };
-})();
-// Get Homepage
-indxrouter.get('/',function(req,res){
-  res.render('index',{dashact:'active',settact:'',helpers: {
-                getrpiIP: function () { return gvar.rpiIP.get()},
-                getwlcIP: function () { return gvar.wlcIP.get()}
-            }
-  });
-});
-indxrouter.get('/settings',function(req,res,next){
-  res.render('settings',{dashact:'',settact:'active'});
-});
-
-module.exports = indxrouter;
+}();
