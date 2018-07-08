@@ -3,11 +3,13 @@ var indxrouter = express.Router();
 var gvar = (function() {
   var rpiIP = "rpiIP0";
   var wlcIP = "wlcIP0";
-  var rpiCPUTemp = "rpiCPUTemp0";
-  var wlcCPUTemp = "wlcCPUTemp0";
   var rpiMEM = "rpiMEM0";
   var wlcMEM = "wlcMEM0";
-  var lastlogin = "lastlogin";
+  var rpiCPU = "rpiMEM0";
+  var wlcCPU = "wlcMEM0";
+  var lastREC = "lastREC";
+  var income = "income adsa";
+  var lastBoot = "lastBoot";
   var vouchers = [];
 
   function setrpiIP(val) {
@@ -22,17 +24,17 @@ var gvar = (function() {
   function getwlcIP() {
     return wlcIP;
   };
-  function setrpiCPUTemp(val) {
-    rpiCPUTemp = val;
+  function setrpiCPU(val) {
+    rpiMEM = val;
   };
-  function getrpiCPUTemp() {
-    return rpiCPUTemp;
+  function getrpiCPU() {
+    return rpiMEM;
   };
-  function setwlcCPUTemp(val) {
-    wlcCPUTemp = val;
+  function setwlcCPU(val) {
+    wlcIP = val;
   };
-  function getwlcCPUTemp() {
-    return wlcCPUTemp;
+  function getwlcCPU() {
+    return wlcIP;
   };
   function setrpiMEM(val) {
     rpiMEM = val;
@@ -46,11 +48,23 @@ var gvar = (function() {
   function getwlcMEM() {
     return wlcMEM;
   };
-  function setlastlogin(val) {
+  function setlastBoot(val) {
+    lastBoot = val;
+  };
+  function getlastBoot() {
+    return lastBoot;
+  };
+  function setIncome(val) {
     lastlogin = val;
   };
-  function getlastlogin() {
-    return lastlogin;
+  function getIncome() {
+    return income;
+  };
+  function setlastREC(val) {
+    lastlogin = val;
+  };
+  function getlastREC() {
+    return lastREC;
   };
   function setvouchers(val) {
     vouchers = null;
@@ -82,22 +96,6 @@ var gvar = (function() {
         return getwlcIP();
       }
     },
-    rpiCPUTemp: {
-      set:function(val) {
-        setrpiCPUTemp(val);
-      },
-      get:function(){
-        return getrpiCPUTemp();
-      }
-    },
-    wlcCPUTemp: {
-      set:function(val) {
-        setwlcCPUTemp(val);
-      },
-      get:function(){
-        return getwlcCPUTemp();
-      }
-    },
     rpiMEM: {
       set:function(val) {
         setrpiMEM(val);
@@ -112,6 +110,46 @@ var gvar = (function() {
       },
       get:function(){
         return getwlcMEM();
+      }
+    },
+    rpiCPU: {
+      set:function(val) {
+        setrpiCPU(val);
+      },
+      get:function(){
+        return getrpiCPU();
+      }
+    },
+    wlcCPU: {
+      set:function(val) {
+        setwlcCPU(val);
+      },
+      get:function(){
+        return getwlcCPU();
+      }
+    },
+    lastREC: {
+      set:function(val) {
+        setlastREC(val);
+      },
+      get:function(){
+        return getlastREC();
+      }
+    },
+    lastBoot: {
+      set:function(val) {
+        setlastBoot(val);
+      },
+      get:function(){
+        return getlastBoot();
+      }
+    },
+    income: {
+      set:function(val) {
+        setIncome(val);
+      },
+      get:function(){
+        return getIncome();
       }
     },
     vouchers:{
@@ -131,7 +169,14 @@ var gvar = (function() {
 indxrouter.get('/',function(req,res){
   res.render('index',{dashact:'active',settact:'',helpers: {
                 getrpiIP: function () { return gvar.rpiIP.get()},
-                getwlcIP: function () { return gvar.wlcIP.get()}
+                getwlcIP: function () { return gvar.wlcIP.get()},
+                getrpiCPU: function () { return gvar.rpiIP.get()},
+                getwlcCPU: function () { return gvar.wlcIP.get()},
+                getrpiMEM: function () { return gvar.rpiIP.get()},
+                getwlcMEM: function () { return gvar.wlcIP.get()},
+                getlastBoot: function () { return gvar.lastBoot.get()},
+                getlastREC: function () { return gvar.lastREC.get()},
+                getincome: function () { return gvar.income.get()},
             }
   });
 });

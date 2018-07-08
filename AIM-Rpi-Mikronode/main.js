@@ -1,3 +1,5 @@
+var max7219lib = require('node-max7219-led-matrix');
+var max7219 = new max7219lib.max7219("/dev/spidev0.0");
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -12,29 +14,23 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var MikroNode = require('./dist/mikronode.js');
 // Create API instance to a host.
-var device = new MikroNode('192.168.88.1');
+var device = new MikroNode('131.101.179.4');
 // device.setDebug(MikroNode.DEBUG);
 var loopstat=true;
-//jsloop(2000);
-/*
-mktkcmd('/ping',{address:'4.2.2.2',count:4},function(val){
-console.log("cba " + val);
-});
-*/
 
-/*
-mktkcmd('/ip/hotspot/user/add',{name:'test','limit-uptime':'00:30:00',disabled:'no',profile:'default','limit-bytes-total':'1M'},function(val){
-console.log("cba " + val);
-});
+max7219.setBrightness(7);
+max7219.clear();
+max7219.cls();
+max7219.letterx('A',1);
+max7219.letterx('I',2);
+max7219.letterx('M',3);
+max7219.letterx(3,4);
 
-
-mktkcmd('/ip/hotspot/user/print',"",function(val){
-console.log("cba ", JSON.stringify(val));
-});
-*/
-
-console.log("END of Command");
 expressSRV();
+//webserver();
+
+jsloop(3000);
+
 function expressSRV(){
 	var routes = require('./src/routes/index');
 	var users = require('./src/routes/users');
@@ -87,14 +83,6 @@ function expressSRV(){
    	console.log('Server started on port ' + app.get('port'));
  	});
 }
-var infunc = function(sval){
-  console.log("clicked");
-}
-
-/*
-webserver();
-
-var loopctr = 1;
 
 function webserver(){
 	var http = require('http').createServer(handler); //require http server, and create server with function handler()
@@ -104,7 +92,7 @@ function webserver(){
 	var LED = new Gpio(4, 'out'); //use GPIO pin 4 as output
 	var pushButton = new Gpio(17, 'in', 'both'); //use GPIO pin 17 as input, and 'both' button presses, and releases should be handled
 
-	http.listen(8080); //listen to port 8080
+//	http.listen(8080); //listen to port 8080
 
 	function handler (req, res) { //create server
 	  fs.readFile(__dirname + '/public/index.html', function(err, data) { //read file index.html in public folder
@@ -148,7 +136,7 @@ function webserver(){
 	  process.exit(); //exit completely
 	});
 }
-*/
+
 function jsloop(delay){
 	setTimeout(function(){
 		console.log("++++++++++++++++++++++++++++++ LOOP delay " + delay);
@@ -176,7 +164,15 @@ function mktkcmd(cmd,params,cb){
 				channel1.write(cmd,params).then(data=>{
 			//	console.log("Done",JSON.stringify(data));
 					if(cmd=='/ping'){
-						var resultstr = data.data[3][4].field + "=" +data.data[3][4].value
+						var resultstr = "";
+						try
+						{
+							resultstr = data.data[3][4].field + "=" +data.data[3][4].value
+						}
+						catch(err){
+							cb(null);
+						}
+						
 						console.log("result: " + resultstr);
 						console.log("standby operation = " + (resultstr == "packet-loss=100"));
 						cb(resultstr);
