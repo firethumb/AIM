@@ -5,8 +5,8 @@ var gvar = (function() {
   var wlcIP = "wlcIP0";
   var rpiMEM = "rpiMEM0";
   var wlcMEM = "wlcMEM0";
-  var rpiCPU = "rpiMEM0";
-  var wlcCPU = "wlcMEM0";
+  var rpiCPU = "rpiCPU0";
+  var wlcCPU = "wlcCPU0";
   var lastREC = "lastREC";
   var income = "income adsa";
   var lastBoot = "lastBoot";
@@ -15,7 +15,7 @@ var gvar = (function() {
   function setrpiIP(val) {
     rpiIP = val;
   };
-  function _getrpiIP() {
+  function getrpiIP() {
     return rpiIP;
   };
   function setwlcIP(val) {
@@ -25,16 +25,16 @@ var gvar = (function() {
     return wlcIP;
   };
   function setrpiCPU(val) {
-    rpiMEM = val;
+    rpiCPU = val;
   };
   function getrpiCPU() {
-    return rpiMEM;
+    return rpiCPU;
   };
   function setwlcCPU(val) {
-    wlcIP = val;
+    wlcCPU = val;
   };
   function getwlcCPU() {
-    return wlcIP;
+    return wlcCPU;
   };
   function setrpiMEM(val) {
     rpiMEM = val;
@@ -85,7 +85,7 @@ var gvar = (function() {
         setrpiIP(val);
       },
       get:function(){
-        return 'test';//getrpiIP();
+        return getrpiIP();
       }
     },
     wlcIP: {
@@ -165,15 +165,16 @@ var gvar = (function() {
     }
   };
 })();
+
 // Get Homepage
 indxrouter.get('/',function(req,res){
   res.render('index',{dashact:'active',settact:'',helpers: {
                 getrpiIP: function () { return gvar.rpiIP.get()},
                 getwlcIP: function () { return gvar.wlcIP.get()},
-                getrpiCPU: function () { return gvar.rpiIP.get()},
-                getwlcCPU: function () { return gvar.wlcIP.get()},
-                getrpiMEM: function () { return gvar.rpiIP.get()},
-                getwlcMEM: function () { return gvar.wlcIP.get()},
+                getrpiCPU: function () { return gvar.rpiCPU.get()},
+                getwlcCPU: function () { return gvar.wlcCPU.get()},
+                getrpiMEM: function () { return gvar.rpiMEM.get()},
+                getwlcMEM: function () { return gvar.wlcMEM.get()},
                 getlastBoot: function () { return gvar.lastBoot.get()},
                 getlastREC: function () { return gvar.lastREC.get()},
                 getincome: function () { return gvar.income.get()},
@@ -184,4 +185,4 @@ indxrouter.get('/settings',function(req,res,next){
   res.render('settings',{dashact:'',settact:'active'});
 });
 
-module.exports = indxrouter;
+module.exports = {routes:indxrouter,gvar:gvar}

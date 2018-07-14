@@ -130,14 +130,25 @@
   <br>
   <div class="input-group">
     <span class="input-group-addon" id="basic-addon1">Auth Code</span>
-    <input type="text" class="form-control" placeholder="Authorization Code" aria-describedby="basic-addon1">
+    <input type="text" class="form-control" placeholder="Authorization Code" aria-describedby="basic-addon1"> 
   </div>
   <br>
 
   <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="button" class="btn btn-primary" onclick="jjj();">kkk</button>
 </form>
 <br>
 <div class="form-group">
   <label for="comment">Generated Code:</label>
   <textarea class="form-control" rows="5" id="comment"></textarea>
 </div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	var socket = io.connect('http://131.101.183.87:3002');
+	function jjj(){
+	aler('afadsfsa');
+	socket.on('connect',function(data){
+		socket.emit('join','asfladsfas');
+	});
+	}
+</script>

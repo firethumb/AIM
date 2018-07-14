@@ -10,36 +10,106 @@ var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var os = require('os');
+const raspi = require('raspi');
+const Serial = require('raspi-serial').Serial;
 
+
+var gvar = require('./src/routes/index');
+
+//console.log(os.cpus());
+/*
+raspi.init(() => {
+  var serial = new Serial();
+  serial.open(() => {
+    serial.write('Hello from raspi-serial');
+    serial.on('data', (data) => {
+      process.stdout.write(data);
+    });
+  });
+});
+*/
+ 
+var cpus = os.cpus();
+var cpustat = "CPU's: ";
+var memt = os.totalmem();
+var memf = os.freemem();
+gvar.gvar.rpiMEM.set(memf+ '/' + memt + '  : ' + Math.round(100 * memf / memt) + '% Used');
+gvar.gvar.rpiIP.set(getrpiIPADDR(os.networkInterfaces()));
+for(var i = 0, len = cpus.length; i < len; i++) {
+//    console.log("CPU %s:", i);
+    
+    var cpu = cpus[i], total = 0;
+
+    for(var type in cpu.times) {
+        total += cpu.times[type];
+    }
+		cpustat += '[' + i + ']: ' + (100 - Math.round(100 * cpu.times['idle'] / total)) + '%  ';
+	
+	/*
+    for(type in cpu.times) {
+        console.log("\t",type, Math.round(100 * cpu.times[type] / total));
+    }
+    */
+}
+console.log('cpustat',cpustat);
+gvar.gvar.rpiCPU.set(cpustat);
+console.log('gvar', gvar.gvar.rpiCPU.get());
 
 var MikroNode = require('./dist/mikronode.js');
 // Create API instance to a host.
 var device = new MikroNode('131.101.179.4');
 // device.setDebug(MikroNode.DEBUG);
 var loopstat=true;
-
+/*
+max7219.setBrightness(7);
+max7219.setBrightness(7);
 max7219.setBrightness(7);
 max7219.clear();
 max7219.cls();
+*/
+/*
 max7219.letterx('A',1);
 max7219.letterx('I',2);
 max7219.letterx('M',3);
 max7219.letterx(3,4);
-
+*/
+/*
+max7219.letterx('B',1);
+max7219.letterx('P',2);
+max7219.letterx('I',3);
+max7219.letterx('T',4);
+*/
 expressSRV();
 //webserver();
 
-jsloop(3000);
-
+//jsloop(3000);
+function getrpiIPADDR(intobj){
+	var addresses = [];
+	for (var k in intobj) {
+	   for (var k2 in intobj[k]) {
+		   var address = intobj[k][k2];
+		   if (address.family === 'IPv4' && address.address !== '127.0.0.1' && !address.internal){
+			   addresses.push(address.address);
+		   }
+	   }
+	}
+	if (addresses[0]){
+		return addresses[0]
+	}else { return 0}
+}
 function expressSRV(){
 	var routes = require('./src/routes/index');
 	var users = require('./src/routes/users');
 	//Init app
 	var app = express();
+	var server = require('http').createServer(app);
+	var io = require('socket.io')(server);
 	app.set('views',path.join(__dirname,'./src/views'));
 	app.engine('handlebars',exphbs({defaultLayout:'../../src/views/layouts/layout'}));
 	app.set('view engine','handlebars');
 	//bodyParser Middleware
+	
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended:false}));
 	app.use(cookieParser());
@@ -76,14 +146,27 @@ function expressSRV(){
 	 res.locals.error = req.flash('error');
 	 next();
 	 });
-	 app.use('/',routes);
+	 app.use('/',routes.routes);
 	//
-	app.set('port',(process.env.PORT || 3002));
+	server.listen(80);
+	console.log('starting sockets connection...');
+	io.on('connection',function(client){
+		console.log('Client connected...');
+		client.on('join',function(data){
+			console.log(data);
+			client.emit('messages','hellow from server');
+		});
+
+	});
+/*	
+	app.set('port',(process.env.PORT || 3003));
 	app.listen(app.get('port'),function() {
    	console.log('Server started on port ' + app.get('port'));
  	});
+*/
+	
 }
-
+/*
 function webserver(){
 	var http = require('http').createServer(handler); //require http server, and create server with function handler()
 	var fs = require('fs'); //require filesystem module
@@ -136,7 +219,7 @@ function webserver(){
 	  process.exit(); //exit completely
 	});
 }
-
+*/
 function jsloop(delay){
 	setTimeout(function(){
 		console.log("++++++++++++++++++++++++++++++ LOOP delay " + delay);
