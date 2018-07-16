@@ -3,31 +3,38 @@ var randomstring = require('randomstring');
 
 var strRandom = randomstring.generate(4);
 
-GenUser(strRandom, '/ip/hotspot/active/print');
+GenUser(strRandom);
+console.log ("test");
 
-function GenUser(strRandom, cmd) {
-    var connection = MikroNode.getConnection('192.168.10.1', 'admin', '');
+function GenUser(strRandom) {
+    var connection = MikroNode.getConnection('131.101.179.4', 'admin', '');
     connection.closeOnDone = true;
 
     connection.connect(function(conn) {
         var chan = conn.openChannel();
         chan.closeOnDone = true;
-        chan.write([cmd], function(c) {
+        try
+        {
+			chan.write(['/ip/hotspot/user/add', '=name=' + strRandom], function(c) {
 
-            c.on('trap', function(data) {
-                console.log(data);
-            });
-            c.on('done', function(data) {
-                console.log(strRandom)
+				c.on('trap', function(data) {
+					console.log(data);
+				});
+				c.on('done', function(data) {
+					console.log(strRandom	)
 
-                var parsed = MikroNode.parseItems(data);
+					var parsed = MikroNode.parseItems(data);
 
-                parsed.forEach(function(item) {
-                    console.log('name:' + item.user);
-                });
+					parsed.forEach(function(item) {
+						console.log('name:' + item.user);
+					});
 
-            });
+				});
 
-        });
+			});
+		}catch(e){
+			console.log('error e',e);
+		}
+        
     });
 }

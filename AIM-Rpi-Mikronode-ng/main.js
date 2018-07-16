@@ -8,14 +8,18 @@ var exphbs = require ('express-handlebars');
 var expressValidator =  require('express-validator');
 var flash = require('connect-flash');
 var session = require('express-session');
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+var MikroNode = require('mikronode-ng');
+var randomstring = require('randomstring');
 var os = require('os');
+var randomstring = require('randomstring');
 const raspi = require('raspi');
 const Serial = require('raspi-serial').Serial;
 
-
 var gvar = require('./src/routes/index');
+
+const RPI_IPADDR = '131.101.179.4';
+const RPI_USERNAME = 'admin';
+const RPI_PASSWORD = '';
 
 //console.log(os.cpus());
 /*
@@ -29,12 +33,18 @@ raspi.init(() => {
   });
 });
 */
+
+var strRandom = randomstring.generate(4);
+var uptimelim = '03:00:00';
+var byteslim = '2M';
+var paramdata = ['=name=' + strRandom,'=limit-uptime='+uptimelim,'=limit-bytes-total='+byteslim];
+GenUser(paramdata);
  
 var cpus = os.cpus();
 var cpustat = "CPU's: ";
 var memt = os.totalmem();
 var memf = os.freemem();
-gvar.gvar.rpiMEM.set(memf+ '/' + memt + '  : ' + Math.round(100 * memf / memt) + '% Used');
+gvar.gvar.rpiMEM.set(memf + '  : ' + Math.round(100 * memf / memt) + '% Used');
 gvar.gvar.rpiIP.set(getrpiIPADDR(os.networkInterfaces()));
 for(var i = 0, len = cpus.length; i < len; i++) {
 //    console.log("CPU %s:", i);
@@ -45,7 +55,6 @@ for(var i = 0, len = cpus.length; i < len; i++) {
         total += cpu.times[type];
     }
 		cpustat += '[' + i + ']: ' + (100 - Math.round(100 * cpu.times['idle'] / total)) + '%  ';
-	
 	/*
     for(type in cpu.times) {
         console.log("\t",type, Math.round(100 * cpu.times[type] / total));
@@ -55,11 +64,6 @@ for(var i = 0, len = cpus.length; i < len; i++) {
 console.log('cpustat',cpustat);
 gvar.gvar.rpiCPU.set(cpustat);
 console.log('gvar', gvar.gvar.rpiCPU.get());
-
-var MikroNode = require('./dist/mikronode.js');
-// Create API instance to a host.
-var device = new MikroNode('131.101.179.4');
-// device.setDebug(MikroNode.DEBUG);
 var loopstat=true;
 /*
 max7219.setBrightness(7);
@@ -82,6 +86,7 @@ max7219.letterx('T',4);
 */
 expressSRV();
 //webserver();
+
 
 //jsloop(3000);
 function getrpiIPADDR(intobj){
@@ -231,67 +236,46 @@ function jsloop(delay){
 		}
 	},delay)
 }
+function GenUser(userparams){
+	if(userparams){
+		mktkcmd('/ip/hotspot/user/add',userparams,function(cbval){
+			console.log("cbval " + cbval);
+		});
+		return 'ok';
+	}else{
+		return 'Missing value, user params required!';
+	}
+}
 function mktkcmd(cmd,params,cb){
-
-	// Connect to MikroTik device
-	device.connect().then(([login])=>login('admin','')).then(conn=>{
-			// When all channels are marked done, close the connection.
-			console.log('connected');
-
-			conn.closeOnDone(true);
-
-			var channel1=conn.openChannel();
-			channel1.closeOnDone(true);
-			//console.log("test   : ",cmd);
+	var connection = MikroNode.getConnection(RPI_IPADDR, RPI_USERNAME,RPI_PASSWORD);
+    connection.closeOnDone = true;
+    connection.connect(function(conn) {
+        try
+        {
+			var chan = conn.openChannel();
+			chan.closeOnDone = true;        
 			if(params){
-				channel1.write(cmd,params).then(data=>{
-			//	console.log("Done",JSON.stringify(data));
-					if(cmd=='/ping'){
-						var resultstr = "";
-						try
-						{
-							resultstr = data.data[3][4].field + "=" +data.data[3][4].value
-						}
-						catch(err){
-							cb(null);
-						}
-						
-						console.log("result: " + resultstr);
-						console.log("standby operation = " + (resultstr == "packet-loss=100"));
-						cb(resultstr);
-						console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-					}else{
-						cb(data);
-					}
-				}).catch(error=>{
-					console.log("Error result ",error);
+				chan.write(cmd,params, function(c) {
+					c.on('trap', function(data) {
+						cb(['trap',data]);
+					});
+					c.on('done', function(data) {
+						cb('done',data);
+					});
 				});
 			}else{
-				console.log("---------------------------------------------------------");
-				channel1.write(cmd).then(data=>{
-			//	console.log("Done",JSON.stringify(data));
-					if(cmd=='/ping'){
-						var resultstr = data.data[3][4].field + "=" +data.data[3][4].value
-						console.log("result: " + resultstr);
-						console.log("standby operation = " + (resultstr == "packet-loss=100"));
-						cb(resultstr);
-					}else{
-						cb(data);
-					}
-				}).catch(error=>{
-					console.log("Error result ",error);
+				chan.write(cmd, function(c) {
+					c.on('trap', function(data) {
+						cb(['trap',data]);
+					});
+					c.on('done', function(data) {
+						cb('done',data);
+					});
 				});
 			}
-
-			/*
-			channel1.write('/tool/ping',params);
-			channel1.data.subscribe(function(response) {
-				console.dir(MikroNode.resultsToObj(response));
-			});
-			*/
-			console.log('Wrote');
+			
+		}catch(e){
+			cb(['err',e]);
 		}
-	).catch(error=>{
-		console.log("Error logging in ",error);
-	});
+    });
 }
