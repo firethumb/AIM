@@ -1,0 +1,154 @@
+<h3 class="page-header">Settings</h3>
+{{#if errors}}
+  {{#each errors}}
+    <div class="alert-danger">{{msg}}</div>
+  {{/each}}
+{{/if}}
+<form method="post" action="/settings">
+  <div class="form-group">
+      <h4>Type of voucher: </h4>
+      <input class="form-check form-check-inline" type="radio" name="inlineRadioOptions" id="radioLCO" value="lco">
+      <label class="form-check-label" for="radioLCO">Lowercase Only</label>
+      <input class="form-check-input form-check-inlin" type="radio" name="inlineRadioOptions" id="radioUCO" value="uco">
+      <label class="form-check-label" for="radioUCO">Uppercase Only</label>
+      <input class="form-check-input form-check-inlin" type="radio" name="inlineRadioOptions" id="radioMIX" value="mix">
+      <label class="form-check-label" for="radioMIX">Mix Alphanumeric</label>
+  </div>
+  <div class="form-group">
+    <h4>Number of Voucher (1 - 100):</h4>
+    <input type="number" min="0" class="form-control"
+    placeholder=1 name="numvoucher">
+  </div>
+  <div class="form-group form-inline">
+    <h4>Time Limit: </h4>
+    <label>DD:</label>
+    <select class="form-control " id="selectTDD">
+      <option>00</option>
+      <option>01</option>
+      <option>02</option>
+      <option>03</option>
+      <option>04</option>
+      <option>05</option>
+      <option>06</option>
+      <option>07</option>
+      <option>08</option>
+      <option>09</option>
+      <option>10</option>
+      <option>11</option>
+      <option>12</option>
+      <option>13</option>
+      <option>14</option>
+      <option>15</option>
+      <option>16</option>
+      <option>17</option>
+      <option>18</option>
+      <option>19</option>
+      <option>20</option>
+      <option>21</option>
+      <option>22</option>
+      <option>23</option>
+      <option>24</option>
+      <option>25</option>
+      <option>26</option>
+      <option>27</option>
+      <option>28</option>
+      <option>29</option>
+      <option>30</option>
+      <option>31</option>
+    </select>
+    <label>HH:</label>
+    <select class="form-control " id="selectTHH">
+      <option>00</option>
+      <option>01</option>
+      <option>02</option>
+      <option>03</option>
+      <option>04</option>
+      <option>05</option>
+      <option>06</option>
+      <option>07</option>
+      <option>08</option>
+      <option>09</option>
+      <option>10</option>
+      <option>11</option>
+      <option>12</option>
+      <option>13</option>
+      <option>14</option>
+      <option>15</option>
+      <option>16</option>
+      <option>17</option>
+      <option>18</option>
+      <option>19</option>
+      <option>20</option>
+      <option>21</option>
+      <option>22</option>
+      <option>23</option>
+      <option>24</option>
+    </select>
+    <label>MM:</label>
+    <select class="form-control " id="selectTMM">
+      <option>00</option>
+      <option>05</option>
+      <option>10</option>
+      <option>15</option>
+      <option>20</option>
+      <option>25</option>
+      <option>30</option>
+      <option>35</option>
+      <option>40</option>
+      <option>45</option>
+      <option>50</option>
+      <option>55</option>
+      <option>60</option>
+    </select>
+    <label>SS:</label>
+    <select class="form-control " id="selectTSS">
+      <option>00</option>
+      <option>15</option>
+      <option>30</option>
+      <option>45</option>
+      <option>60</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <h4>Traffic Limit:</h4>
+    <select class="form-control" id="selectTSS">
+      <option>256kbps</option>
+      <option>512kbps</option>
+      <option>756kbps</option>
+      <option>1M</option>
+      <option>1.5M</option>
+      <option>2M</option>
+      <option>2.5M</option>
+      <option>3M</option>
+      <option>5M</option>
+      <option>10M</option>
+      <option>15M</option>
+      <option>20M</option>
+      <option>No Limit</option>
+    </select>
+  </div>
+  <br>
+  <div class="input-group">
+    <span class="input-group-addon" id="basic-addon1">Auth Code</span>
+    <input type="text" class="form-control" placeholder="Authorization Code" aria-describedby="basic-addon1"> 
+  </div>
+  <br>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="button" class="btn btn-primary" onclick="jjj();">kkk</button>
+</form>
+<br>
+<div class="form-group">
+  <label for="comment">Generated Code:</label>
+  <textarea class="form-control" rows="5" id="comment"></textarea>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	var socket = io.connect('http://131.101.183.87:3002');
+	function jjj(){
+	aler('afadsfsa');
+	socket.on('connect',function(data){
+		socket.emit('join','asfladsfas');
+	});
+	}
+</script>
