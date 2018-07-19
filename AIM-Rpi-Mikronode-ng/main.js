@@ -17,9 +17,11 @@ const Serial = require('raspi-serial').Serial;
 
 var gvar = require('./src/routes/index');
 
-const RPI_IPADDR = '131.101.179.4';
+const RPI_IPADDR = '';
 const RPI_USERNAME = 'admin';
 const RPI_PASSWORD = '';
+
+var mknodecmd = require('./mknodecmd');
 
 //console.log(os.cpus());
 /*
@@ -33,13 +35,13 @@ raspi.init(() => {
   });
 });
 */
-
 var strRandom = randomstring.generate(4);
 var uptimelim = '03:00:00';
 var byteslim = '2M';
 var paramdata = ['=name=' + strRandom,'=limit-uptime='+uptimelim,'=limit-bytes-total='+byteslim];
-GenUser(paramdata);
- 
+
+//mknodecmd.GenUser(paramdata);
+
 var cpus = os.cpus();
 var cpustat = "CPU's: ";
 var memt = os.totalmem();
@@ -105,7 +107,6 @@ function getrpiIPADDR(intobj){
 }
 function expressSRV(){
 	var routes = require('./src/routes/index');
-	var users = require('./src/routes/users');
 	//Init app
 	var app = express();
 	var server = require('http').createServer(app);
@@ -255,14 +256,14 @@ function mktkcmd(cmd,params,cb){
 			var chan = conn.openChannel();
 			chan.closeOnDone = true;        
 			if(params){
-				chan.write(cmd,params, function(c) {
-					c.on('trap', function(data) {
-						cb(['trap',data]);
-					});
-					c.on('done', function(data) {
-						cb('done',data);
-					});
-				});
+				chan.write([cmd].concat(params), function(c) {
+							c.on('trap', function(data) {
+								cb(['trap',data]);
+							});
+							c.on('done', function(data) {
+								cb('done',data);
+							});
+						});
 			}else{
 				chan.write(cmd, function(c) {
 					c.on('trap', function(data) {
