@@ -17,11 +17,14 @@ const Serial = require('raspi-serial').Serial;
 
 var gvar = require('./src/routes/index');
 
-const RPI_IPADDR = '';
+const RPI_IPADDR = '131.101.179.4';
 const RPI_USERNAME = 'admin';
 const RPI_PASSWORD = '';
 
 var mknodecmd = require('./mknodecmd');
+var hwhbactiveflg = false;
+gethwheartbeats(10000);
+
 
 //console.log(os.cpus());
 /*
@@ -42,30 +45,35 @@ var paramdata = ['=name=' + strRandom,'=limit-uptime='+uptimelim,'=limit-bytes-t
 
 //mknodecmd.GenUser(paramdata);
 
-var cpus = os.cpus();
-var cpustat = "CPU's: ";
-var memt = os.totalmem();
-var memf = os.freemem();
-gvar.gvar.rpiMEM.set(memf + '  : ' + Math.round(100 * memf / memt) + '% Used');
-gvar.gvar.rpiIP.set(getrpiIPADDR(os.networkInterfaces()));
-for(var i = 0, len = cpus.length; i < len; i++) {
-//    console.log("CPU %s:", i);
-    
-    var cpu = cpus[i], total = 0;
+function check_HW_STAT(){
+	var cpus = os.cpus();
+	var cpustat = "CPU's: ";
+	var memt = os.totalmem();
+	var memf = os.freemem();
+	gvar.gvar.rpiMEM.set(memf + '  : ' + Math.round(100 * memf / memt) + '% Used');
 
-    for(var type in cpu.times) {
-        total += cpu.times[type];
-    }
-		cpustat += '[' + i + ']: ' + (100 - Math.round(100 * cpu.times['idle'] / total)) + '%  ';
-	/*
-    for(type in cpu.times) {
-        console.log("\t",type, Math.round(100 * cpu.times[type] / total));
-    }
-    */
+	for(var i = 0, len = cpus.length; i < len; i++) {
+	//    console.log("CPU %s:", i);
+		
+		var cpu = cpus[i], total = 0;
+
+		for(var type in cpu.times) {
+			total += cpu.times[type];
+		}
+			cpustat += '[' + i + ']: ' + (100 - Math.round(100 * cpu.times['idle'] / total)) + '%  ';
+		/*
+		for(type in cpu.times) {
+			console.log("\t",type, Math.round(100 * cpu.times[type] / total));
+		}
+		*/
+	}
+	console.log('cpustat',cpustat);
+	gvar.gvar.rpiCPU.set(cpustat);
+	//console.log('gvar', gvar.gvar.rpiCPU.get());
 }
-console.log('cpustat',cpustat);
-gvar.gvar.rpiCPU.set(cpustat);
-console.log('gvar', gvar.gvar.rpiCPU.get());
+
+gvar.gvar.rpiIP.set(getrpiIPADDR(os.networkInterfaces()));
+
 var loopstat=true;
 /*
 max7219.setBrightness(7);
@@ -172,6 +180,126 @@ function expressSRV(){
 */
 	
 }
+
+function checkipsla(cb){
+	console.log('1st');
+	var promise = new Promise(function(resolve,reject){
+		mktkcmd('/ping',['=address=4.2.2.2','=count=4'],function(val){
+			if (val.length>0 || val.toString().indexOf("ms")!=-1){
+				resolve(1);
+			}else{
+				resolve(0);
+			}
+		});
+	});
+	promise.then(pipslabool2).then(pipslabool3).then(function(ctr){
+		cb(ctr);
+	});
+}
+function pipslabool2(ctr){
+	return new Promise(function(resolve,reject){
+		mktkcmd('/ping',['=address=208.67.222.222','=count=4'],function(val){
+			if (val.length>0 || val.toString().indexOf("ms")!=-1){
+				console.log('2nd + ' + (ctr+1),val);
+				resolve(ctr + 1);
+			}else{
+				console.log('2nd' + ctr);
+				resolve(ctr);
+			}
+		});
+	});
+}
+function pipslabool3(ctr){
+	return new Promise(function(resolve,reject){
+		mktkcmd('/ping',['=address=8.8.8.8','=count=4'],function(val){
+			if (val.length>0 || val.toString().indexOf("ms")!=-1){
+				console.log('3rd + ' + (ctr+1),val);
+				resolve(ctr + 1);
+			}else{
+				console.log('3rd' + ctr);
+				resolve(ctr);
+			}
+		});
+	});
+}
+function gethwheartbeats(hwhbdelay,cb){
+	setTimeout(function(){
+		console.log("+++++hwhb delay " + hwhbdelay);
+		checkipsla(function(retval){
+			if(retval>1){
+				console.log('with internet');
+			}else{
+				console.log('without internet');
+			}
+		});
+		check_HW_STAT();
+		if (hwhbactiveflg){
+			gethwheartbeats(10000);
+		}else{
+			gethwheartbeats(hwhbdelay);
+		}
+	},hwhbdelay)
+}
+function GenUser(userparams){
+	if(userparams){
+		mktkcmd('/ip/hotspot/user/add',userparams,function(cbval){
+			console.log("cbval " + cbval);
+		});
+		return 'ok';
+	}else{
+		return 'Missing value, user params required!';
+	}
+}
+function mktkcmd(cmd,params,cb){
+	var connection = MikroNode.getConnection(RPI_IPADDR, RPI_USERNAME,RPI_PASSWORD);
+    connection.closeOnDone = true;
+    connection.connect(function(conn) {
+        try
+        {
+			var chan = conn.openChannel();
+			chan.closeOnDone = true;        
+			if(params){
+				chan.write([cmd].concat(params), function(c) {
+							c.on('trap', function(data) {
+								cb(['trap',data]);
+							});
+							c.on('done', function(data) {
+								cb(parsemkdata(cmd,data));
+							});
+						});
+			}else{
+				chan.write(cmd, function(c) {
+					c.on('trap', function(data) {
+						cb(['trap',data]);
+					});
+					c.on('done', function(data) {
+						cb(data);
+					});
+				});
+			}
+			
+		}catch(e){
+			cb(['err',e]);
+		}
+    });
+}
+function parsemkdata(cmd,val){
+	var arrx = [];
+	if (cmd='/ping'){	
+		for(i=0;i<4;i++){
+			try{
+				var tmp =val[i][10].split('=avg-rtt=');
+				if (tmp.length = 2){
+					arrx.push(tmp[1]);
+				}
+			}catch(err){
+			}
+		}
+	}else{
+		return val;
+	}
+	return arrx;
+}
 /*
 function webserver(){
 	var http = require('http').createServer(handler); //require http server, and create server with function handler()
@@ -226,57 +354,3 @@ function webserver(){
 	});
 }
 */
-function jsloop(delay){
-	setTimeout(function(){
-		console.log("++++++++++++++++++++++++++++++ LOOP delay " + delay);
-		mktkcmd('/ping',{address:'4.2.2.2',count:4},function(val){
-		console.log("cba " + val);
-		});
-		if (loopstat){
-			jsloop(delay);
-		}
-	},delay)
-}
-function GenUser(userparams){
-	if(userparams){
-		mktkcmd('/ip/hotspot/user/add',userparams,function(cbval){
-			console.log("cbval " + cbval);
-		});
-		return 'ok';
-	}else{
-		return 'Missing value, user params required!';
-	}
-}
-function mktkcmd(cmd,params,cb){
-	var connection = MikroNode.getConnection(RPI_IPADDR, RPI_USERNAME,RPI_PASSWORD);
-    connection.closeOnDone = true;
-    connection.connect(function(conn) {
-        try
-        {
-			var chan = conn.openChannel();
-			chan.closeOnDone = true;        
-			if(params){
-				chan.write([cmd].concat(params), function(c) {
-							c.on('trap', function(data) {
-								cb(['trap',data]);
-							});
-							c.on('done', function(data) {
-								cb('done',data);
-							});
-						});
-			}else{
-				chan.write(cmd, function(c) {
-					c.on('trap', function(data) {
-						cb(['trap',data]);
-					});
-					c.on('done', function(data) {
-						cb('done',data);
-					});
-				});
-			}
-			
-		}catch(e){
-			cb(['err',e]);
-		}
-    });
-}
