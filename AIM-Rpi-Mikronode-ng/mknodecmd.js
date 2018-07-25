@@ -30,7 +30,7 @@ function mktkcmd(cmd,params,cb){
         try
         {
 			var chan = conn.openChannel();
-			chan.closeOnDone = true;        
+			chan.closeOnDone = true;
 			if(params){
 				chan.write([cmd].concat(params), function(c) {
 							c.on('trap', function(data) {
@@ -50,7 +50,7 @@ function mktkcmd(cmd,params,cb){
 					});
 				});
 			}
-			
+
 		}catch(e){
 			cb(['err',e]);
 		}

@@ -12,18 +12,23 @@ var MikroNode = require('mikronode-ng');
 var randomstring = require('randomstring');
 var os = require('os');
 var randomstring = require('randomstring');
-const raspi = require('raspi');
-const Serial = require('raspi-serial').Serial;
-
+const pisoval = 12;
+//const raspi = require('raspi');
+//const Serial = require('raspi-serial').Serial;
+var Gpio = require('onoff').Gpio
+var coin_waitflg = false;
+var cvaldly = false;
+var cval = 0;
+getcoinINT();
 var gvar = require('./src/routes/index');
 
-const RPI_IPADDR = '131.101.179.4';
+const RPI_IPADDR = '';
 const RPI_USERNAME = 'admin';
 const RPI_PASSWORD = '';
 
 var mknodecmd = require('./mknodecmd');
 var hwhbactiveflg = false;
-gethwheartbeats(10000);
+//gethwheartbeats(10000);
 
 
 //console.log(os.cpus());
@@ -44,6 +49,92 @@ var byteslim = '2M';
 var paramdata = ['=name=' + strRandom,'=limit-uptime='+uptimelim,'=limit-bytes-total='+byteslim];
 
 //mknodecmd.GenUser(paramdata);
+var timeoutHndler = [];
+var cointHndler = [];
+
+function addvoucher(coinval){
+	var strRandom = randomstring.generate(4);
+	var uptlim = "";
+	var i=0;
+	console.log('coinval d1 ' + coinval);
+	for (;((coinval>=20)&&(i<5));i++){
+		coinval = coinval - 20;
+	}
+	console.log('coinval d2 ' + coinval);
+	console.log('i       d3 ' + i);
+	if(i>0){
+		uptlim = i+'d ';
+	}
+	uptlim = uptlim + pisoconversionfn(coinval);
+	console.log('kkkkkk    ' + strRandom + "  Lim  " + uptlim);
+	mknodecmd.GenUser(['=name=' + strRandom,'=limit-uptime='+uptlim]);
+}
+function pisoconversionfn(value){
+	if (value<=0){return '00:00:00';}
+	var tmpv = pisoval * value;
+	var i = 0;
+//	console.log('tmpv    d4 ' + tmpv);
+	for (;tmpv>=60;i++){
+		tmpv = tmpv - 60;
+	}
+//	console.log('tmpv    d5 ' + tmpv);
+//	console.log('i       d6 ' + i);
+	if (tmpv>=10){
+		return '0'+i+':'+tmpv+':00';
+	}
+	return '0'+i+':0'+tmpv+':00';
+}
+function getcoinINT(){
+	console.log('Please press the button on GPIO #18...');
+//	var blinkInterval = setInterval(blinkLED, 250); //run the blinkLED function every 250ms
+	var LED = new Gpio(4, 'out'); //use GPIO pin 4, and specify that it is output
+
+	button = new Gpio(17, 'in', 'both');
+	button.watch(function (err, value) {
+		if (err) throw err;
+
+		console.log('GPIO coin: ' + value);
+		//LED.writeSync(value);
+		if(value == 1){
+			cval++;
+		}
+		if(cvaldly){
+/*			if (coin_waitflg){
+				setTimeout(updtecval(),9000);
+			}else{
+			}
+*/			console.log('+++**** true');
+			clearTimeout(timeoutHndler);
+			timeoutHndler = setTimeout(cvaldlyfn,4000);
+			clearTimeout(cointHndler);
+		}
+		else{
+			console.log('+++**** false');
+			cvaldly = true;
+			timeoutHndler = setTimeout(cvaldlyfn,4000);
+		}
+		//button.unexport(); // Unexport GPIO and free resources
+	});
+}
+function cvaldlyfn(){
+	console.log('++++++++++++++++++++++++++++++++++++done cval:  ' + cval);
+	cvaldly = false;
+	if (coin_waitflg){
+		clearTimeout(cointHndler);
+		cointHndler = setTimeout(coinwdlyfn,8000);
+
+	}else{
+		coin_waitflg = true;
+		cointHndler = setTimeout(coinwdlyfn,12000);
+	}
+}
+function coinwdlyfn(){
+	console.log('++++++++$$$$$$$$$$$$$$$$$$$$$$$$$$$$44 final cval:  ' + cval);
+	coin_waitflg = false;
+	addvoucher(cval);
+	cval = 0;
+
+}
 
 function check_HW_STAT(){
 	var cpus = os.cpus();
@@ -54,7 +145,7 @@ function check_HW_STAT(){
 
 	for(var i = 0, len = cpus.length; i < len; i++) {
 	//    console.log("CPU %s:", i);
-		
+
 		var cpu = cpus[i], total = 0;
 
 		for(var type in cpu.times) {
@@ -74,7 +165,6 @@ function check_HW_STAT(){
 
 gvar.gvar.rpiIP.set(getrpiIPADDR(os.networkInterfaces()));
 
-var loopstat=true;
 /*
 max7219.setBrightness(7);
 max7219.setBrightness(7);
@@ -123,7 +213,7 @@ function expressSRV(){
 	app.engine('handlebars',exphbs({defaultLayout:'../../src/views/layouts/layout'}));
 	app.set('view engine','handlebars');
 	//bodyParser Middleware
-	
+
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended:false}));
 	app.use(cookieParser());
@@ -172,13 +262,12 @@ function expressSRV(){
 		});
 
 	});
-/*	
+/*
 	app.set('port',(process.env.PORT || 3003));
 	app.listen(app.get('port'),function() {
    	console.log('Server started on port ' + app.get('port'));
  	});
 */
-	
 }
 
 function checkipsla(cb){
@@ -257,7 +346,7 @@ function mktkcmd(cmd,params,cb){
         try
         {
 			var chan = conn.openChannel();
-			chan.closeOnDone = true;        
+			chan.closeOnDone = true;
 			if(params){
 				chan.write([cmd].concat(params), function(c) {
 							c.on('trap', function(data) {
@@ -277,7 +366,7 @@ function mktkcmd(cmd,params,cb){
 					});
 				});
 			}
-			
+
 		}catch(e){
 			cb(['err',e]);
 		}
@@ -285,7 +374,7 @@ function mktkcmd(cmd,params,cb){
 }
 function parsemkdata(cmd,val){
 	var arrx = [];
-	if (cmd='/ping'){	
+	if (cmd='/ping'){
 		for(i=0;i<4;i++){
 			try{
 				var tmp =val[i][10].split('=avg-rtt=');

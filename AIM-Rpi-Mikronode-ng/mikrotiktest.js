@@ -1,40 +1,51 @@
 var MikroNode = require('mikronode-ng');
 var randomstring = require('randomstring');
 
-var strRandom = randomstring.generate(4);
+const RPI_IPADDR = '';
+const RPI_USERNAME = 'admin';
+const RPI_PASSWORD = '';
 
-GenUser(strRandom);
+//var strRandom = randomstring.generate(4);
+
+//GenUser(strRandom);
 console.log ("test");
+mktkcmd('/ping','4.2.2.2',function(cbval){
+	console.log("cbval " + cbval);
+});
 
-function GenUser(strRandom) {
-    var connection = MikroNode.getConnection('131.101.179.4', 'admin', '');
+function mktkcmd(cmd,params,cb){
+	var connection = MikroNode.getConnection(RPI_IPADDR, RPI_USERNAME,RPI_PASSWORD);
     connection.closeOnDone = true;
-
     connection.connect(function(conn) {
-        var chan = conn.openChannel();
-        chan.closeOnDone = true;
         try
         {
-			chan.write(['/ip/hotspot/user/add', '=name=' + strRandom], function(c) {
-
-				c.on('trap', function(data) {
-					console.log(data);
-				});
-				c.on('done', function(data) {
-					console.log(strRandom	)
-
-					var parsed = MikroNode.parseItems(data);
-
-					parsed.forEach(function(item) {
-						console.log('name:' + item.user);
+			var chan = conn.openChannel();
+			chan.closeOnDone = true;
+			if(params){
+				console.log('here');
+				chan.write(['/ping','=address=4.2.2.2','=count=4'],function(c) {
+							c.on('trap', function(data) {
+								console.log('output',data);
+								cb(['trap',data]);
+							});
+							c.on('done', function(data) {
+								console.log('output',data);
+								cb('done',data);
+							});
+						});
+			}else{
+				chan.write(['/ip/hotspot/user/add', '=name=' + 'asfad'], function(c) {
+					c.on('trap', function(data) {
+						cb(['trap',data]);
 					});
-
+					c.on('done', function(data) {
+						cb('done',data);
+					});
 				});
+			}
 
-			});
 		}catch(e){
-			console.log('error e',e);
+			cb(['err',e]);
 		}
-        
     });
 }
