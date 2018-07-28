@@ -1,5 +1,5 @@
-var max7219lib = require('node-max7219-led-matrix');
-var max7219 = new max7219lib.max7219("/dev/spidev0.0");
+//var max7219lib = require('node-max7219-led-matrix');
+//var max7219 = new max7219lib.max7219("/dev/spidev0.0");
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -8,7 +8,6 @@ var exphbs = require ('express-handlebars');
 var expressValidator =  require('express-validator');
 var flash = require('connect-flash');
 var session = require('express-session');
-var MikroNode = require('mikronode-ng');
 var randomstring = require('randomstring');
 var os = require('os');
 var randomstring = require('randomstring');
@@ -18,19 +17,21 @@ const pisoval = 12;
 var Gpio = require('onoff').Gpio
 var coin_waitflg = false;
 var cvaldly = false;
-var cval = 0;
-getcoinINT();
+var cval = 0;		
+
 var gvar = require('./src/routes/index');
 
-const RPI_IPADDR = '';
+const RPI_IPADDR = '131.101.179.4';
 const RPI_USERNAME = 'admin';
 const RPI_PASSWORD = '';
 
 var mknodecmd = require('./mknodecmd');
 var hwhbactiveflg = false;
-//gethwheartbeats(10000);
+var timeoutHndler = [];
+var cointHndler = [];
 
-
+gethwheartbeats(10000);
+//getcoinINT();
 //console.log(os.cpus());
 /*
 raspi.init(() => {
@@ -43,14 +44,52 @@ raspi.init(() => {
   });
 });
 */
-var strRandom = randomstring.generate(4);
-var uptimelim = '03:00:00';
-var byteslim = '2M';
-var paramdata = ['=name=' + strRandom,'=limit-uptime='+uptimelim,'=limit-bytes-total='+byteslim];
+function genericArryParser(ARR,KEYS,option){
+	var tmparry = KEYS;
+	var result=[];
+	var flg = false;
+	var tmp2 =  ARR[0];
+	if (option!=='section'){
+		for(var i=0;i<tmp2.length;i++){
+			var j =0;
+			flg = false;
+			for (;j<tmparry.length;j++){
+				if(tmp2[i].indexOf(tmparry[j])!==-1){
+					var tmp = tmp2[i].split('='+tmparry[j]+'=');
+					if (option){
+						result.push( tmparry[j]+':'+tmp[1]);
+					}else{
+						result.push(tmp[1]);
+					}
+					flg = true;
+					break;
+				}
+			}
+			if(flg){
+				tmparry.splice(j,1);
+			}
+			
+		}
+	}else{
+		var stopflg = false;
 
-//mknodecmd.GenUser(paramdata);
-var timeoutHndler = [];
-var cointHndler = [];
+		for(var i=0;i<tmp2.length;i++){
+			if(tmp2[i].indexOf('!re')!==-1){
+				result=[];
+				if (stopflg){
+					break;
+				}
+			}else{
+				result.push(tmp2[i]);
+				if(tmp2[i].indexOf(KEYS)!==-1){
+					stopflg = true;
+				}
+			}
+			
+		}
+	}
+	return result;
+}
 
 function addvoucher(coinval){
 	var strRandom = randomstring.generate(4);
@@ -70,7 +109,7 @@ function addvoucher(coinval){
 	mknodecmd.GenUser(['=name=' + strRandom,'=limit-uptime='+uptlim]);
 }
 function pisoconversionfn(value){
-	if (value<=0){return '00:00:00';}
+	if (value<=0){return '00:00:00';} 
 	var tmpv = pisoval * value;
 	var i = 0;
 //	console.log('tmpv    d4 ' + tmpv);
@@ -92,7 +131,7 @@ function getcoinINT(){
 	button = new Gpio(17, 'in', 'both');
 	button.watch(function (err, value) {
 		if (err) throw err;
-
+		
 		console.log('GPIO coin: ' + value);
 		//LED.writeSync(value);
 		if(value == 1){
@@ -105,13 +144,13 @@ function getcoinINT(){
 			}
 */			console.log('+++**** true');
 			clearTimeout(timeoutHndler);
-			timeoutHndler = setTimeout(cvaldlyfn,4000);
+			timeoutHndler = setTimeout(cvaldlyfn,2000);
 			clearTimeout(cointHndler);
 		}
 		else{
 			console.log('+++**** false');
 			cvaldly = true;
-			timeoutHndler = setTimeout(cvaldlyfn,4000);
+			timeoutHndler = setTimeout(cvaldlyfn,2000);
 		}
 		//button.unexport(); // Unexport GPIO and free resources
 	});
@@ -121,11 +160,11 @@ function cvaldlyfn(){
 	cvaldly = false;
 	if (coin_waitflg){
 		clearTimeout(cointHndler);
-		cointHndler = setTimeout(coinwdlyfn,8000);
-
+		cointHndler = setTimeout(coinwdlyfn,3000);
+			
 	}else{
 		coin_waitflg = true;
-		cointHndler = setTimeout(coinwdlyfn,12000);
+		cointHndler = setTimeout(coinwdlyfn,3000);
 	}
 }
 function coinwdlyfn(){
@@ -133,7 +172,7 @@ function coinwdlyfn(){
 	coin_waitflg = false;
 	addvoucher(cval);
 	cval = 0;
-
+	
 }
 
 function check_HW_STAT(){
@@ -145,7 +184,7 @@ function check_HW_STAT(){
 
 	for(var i = 0, len = cpus.length; i < len; i++) {
 	//    console.log("CPU %s:", i);
-
+		
 		var cpu = cpus[i], total = 0;
 
 		for(var type in cpu.times) {
@@ -158,9 +197,27 @@ function check_HW_STAT(){
 		}
 		*/
 	}
-	console.log('cpustat',cpustat);
 	gvar.gvar.rpiCPU.set(cpustat);
 	//console.log('gvar', gvar.gvar.rpiCPU.get());
+	
+	//GET MK STATS
+	mknodecmd.mktkcmd('/system/resource/print',false,function(val){
+		var valarry = genericArryParser(val,['free-memory','cpu-load','uptime'],false);
+		gvar.gvar.wlcCPU.set(valarry[2]);
+		gvar.gvar.wlcMEM.set(valarry[1]);
+		gvar.gvar.uptime.set(valarry[0]);
+	});
+	mknodecmd.mktkcmd('/ip/address/print',false,function(val){
+		var valarry = genericArryParser(val,'ether1','section');
+//		console.log('asdf2  ',valarry);
+		for(var i=0;i<valarry.length;i++){
+			if (valarry[i].indexOf('address')!==-1){
+				gvar.gvar.wlcIP.set(valarry[i].split('=address=')[1]);
+				break;
+			}
+		}
+	});
+	
 }
 
 gvar.gvar.rpiIP.set(getrpiIPADDR(os.networkInterfaces()));
@@ -213,7 +270,7 @@ function expressSRV(){
 	app.engine('handlebars',exphbs({defaultLayout:'../../src/views/layouts/layout'}));
 	app.set('view engine','handlebars');
 	//bodyParser Middleware
-
+	
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended:false}));
 	app.use(cookieParser());
@@ -252,7 +309,7 @@ function expressSRV(){
 	 });
 	 app.use('/',routes.routes);
 	//
-	server.listen(80);
+	server.listen(3002);
 	console.log('starting sockets connection...');
 	io.on('connection',function(client){
 		console.log('Client connected...');
@@ -262,7 +319,7 @@ function expressSRV(){
 		});
 
 	});
-/*
+/*	
 	app.set('port',(process.env.PORT || 3003));
 	app.listen(app.get('port'),function() {
    	console.log('Server started on port ' + app.get('port'));
@@ -271,9 +328,8 @@ function expressSRV(){
 }
 
 function checkipsla(cb){
-	console.log('1st');
 	var promise = new Promise(function(resolve,reject){
-		mktkcmd('/ping',['=address=4.2.2.2','=count=4'],function(val){
+		mknodecmd.mktkcmd('/ping',['=address=4.2.2.2','=count=4'],function(val){
 			if (val.length>0 || val.toString().indexOf("ms")!=-1){
 				resolve(1);
 			}else{
@@ -287,12 +343,10 @@ function checkipsla(cb){
 }
 function pipslabool2(ctr){
 	return new Promise(function(resolve,reject){
-		mktkcmd('/ping',['=address=208.67.222.222','=count=4'],function(val){
+		mknodecmd.mktkcmd('/ping',['=address=208.67.222.222','=count=4'],function(val){
 			if (val.length>0 || val.toString().indexOf("ms")!=-1){
-				console.log('2nd + ' + (ctr+1),val);
 				resolve(ctr + 1);
 			}else{
-				console.log('2nd' + ctr);
 				resolve(ctr);
 			}
 		});
@@ -300,12 +354,10 @@ function pipslabool2(ctr){
 }
 function pipslabool3(ctr){
 	return new Promise(function(resolve,reject){
-		mktkcmd('/ping',['=address=8.8.8.8','=count=4'],function(val){
+		mknodecmd.mktkcmd('/ping',['=address=8.8.8.8','=count=4'],function(val){
 			if (val.length>0 || val.toString().indexOf("ms")!=-1){
-				console.log('3rd + ' + (ctr+1),val);
 				resolve(ctr + 1);
 			}else{
-				console.log('3rd' + ctr);
 				resolve(ctr);
 			}
 		});
@@ -313,7 +365,7 @@ function pipslabool3(ctr){
 }
 function gethwheartbeats(hwhbdelay,cb){
 	setTimeout(function(){
-		console.log("+++++hwhb delay " + hwhbdelay);
+//		console.log("+++++hwhb delay " + hwhbdelay);
 		checkipsla(function(retval){
 			if(retval>1){
 				console.log('with internet');
@@ -329,52 +381,9 @@ function gethwheartbeats(hwhbdelay,cb){
 		}
 	},hwhbdelay)
 }
-function GenUser(userparams){
-	if(userparams){
-		mktkcmd('/ip/hotspot/user/add',userparams,function(cbval){
-			console.log("cbval " + cbval);
-		});
-		return 'ok';
-	}else{
-		return 'Missing value, user params required!';
-	}
-}
-function mktkcmd(cmd,params,cb){
-	var connection = MikroNode.getConnection(RPI_IPADDR, RPI_USERNAME,RPI_PASSWORD);
-    connection.closeOnDone = true;
-    connection.connect(function(conn) {
-        try
-        {
-			var chan = conn.openChannel();
-			chan.closeOnDone = true;
-			if(params){
-				chan.write([cmd].concat(params), function(c) {
-							c.on('trap', function(data) {
-								cb(['trap',data]);
-							});
-							c.on('done', function(data) {
-								cb(parsemkdata(cmd,data));
-							});
-						});
-			}else{
-				chan.write(cmd, function(c) {
-					c.on('trap', function(data) {
-						cb(['trap',data]);
-					});
-					c.on('done', function(data) {
-						cb(data);
-					});
-				});
-			}
-
-		}catch(e){
-			cb(['err',e]);
-		}
-    });
-}
 function parsemkdata(cmd,val){
 	var arrx = [];
-	if (cmd='/ping'){
+	if (cmd='/ping'){	
 		for(i=0;i<4;i++){
 			try{
 				var tmp =val[i][10].split('=avg-rtt=');
@@ -389,57 +398,3 @@ function parsemkdata(cmd,val){
 	}
 	return arrx;
 }
-/*
-function webserver(){
-	var http = require('http').createServer(handler); //require http server, and create server with function handler()
-	var fs = require('fs'); //require filesystem module
-	var io = require('socket.io')(http) //require socket.io module and pass the http object (server)
-	var Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
-	var LED = new Gpio(4, 'out'); //use GPIO pin 4 as output
-	var pushButton = new Gpio(17, 'in', 'both'); //use GPIO pin 17 as input, and 'both' button presses, and releases should be handled
-
-//	http.listen(8080); //listen to port 8080
-
-	function handler (req, res) { //create server
-	  fs.readFile(__dirname + '/public/index.html', function(err, data) { //read file index.html in public folder
-		if (err) {
-		  res.writeHead(404, {'Content-Type': 'text/html'}); //display 404 on error
-		  return res.end("404 Not Found");
-		}
-		res.writeHead(200, {'Content-Type': 'text/html'}); //write HTML
-		res.write(data); //write data from index.html
-		return res.end();
-	  });
-	}
-
-	io.sockets.on('connection', function (socket) {// WebSocket Connection
-	  var lightvalue = 0; //static variable for current status
-	  pushButton.watch(function (err, value) { //Watch for hardware interrupts on pushButton
-		if (err) { //if an error
-		  console.error('There was an error', err); //output error message to console
-		  return;
-		}
-		lightvalue = value;
-		socket.emit('light', lightvalue); //send button status to client
-	  });
-	  socket.on('light', function(data) { //get light switch status from client
-		lightvalue = data;
-		if (lightvalue != LED.readSync()) { //only change LED if status has changed
-		  LED.writeSync(lightvalue); //turn LED on or off
-		  loopstat = lightvalue;
-		  console.log("lightvalue = " + lightvalue);
-		  if (loopstat) {
-			  jsloop(4000);
-		  }
-		}
-	  });
-	});
-
-	process.on('SIGINT', function () { //on ctrl+c
-	  LED.writeSync(0); // Turn LED off
-	  LED.unexport(); // Unexport LED GPIO to free resources
-	  pushButton.unexport(); // Unexport Button GPIO to free resources
-	  process.exit(); //exit completely
-	});
-}
-*/

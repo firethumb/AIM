@@ -1,6 +1,6 @@
 var MikroNode = require('mikronode-ng');
 var randomstring = require('randomstring');
-const RPI_IPADDR = '';
+const RPI_IPADDR = '131.101.179.4';
 const RPI_USERNAME = 'admin';
 const RPI_PASSWORD = '';
 
@@ -37,7 +37,7 @@ function mktkcmd(cmd,params,cb){
 								cb(['trap',data]);
 							});
 							c.on('done', function(data) {
-								cb('done',data);
+								cb(parsemkdata(cmd,data));
 							});
 						});
 			}else{
@@ -46,15 +46,31 @@ function mktkcmd(cmd,params,cb){
 						cb(['trap',data]);
 					});
 					c.on('done', function(data) {
-						cb('done',data);
+						cb(data);
 					});
 				});
 			}
-
+			
 		}catch(e){
 			cb(['err',e]);
 		}
     });
 }
-
+function parsemkdata(cmd,val){
+	var arrx = [];
+	if (cmd='/ping'){	
+		for(i=0;i<4;i++){
+			try{
+				var tmp =val[i][10].split('=avg-rtt=');
+				if (tmp.length = 2){
+					arrx.push(tmp[1]);
+				}
+			}catch(err){
+			}
+		}
+	}else{
+		return val;
+	}
+	return arrx;
+}
 module.exports = {GenUser,mktkcmd};

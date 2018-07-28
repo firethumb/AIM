@@ -1,7 +1,6 @@
 var randomstring = require('randomstring');
 var express = require('express');
 var mknodecmd = require('../../mknodecmd');
-
 var indxrouter = express.Router();
 var gvar = (function() {
   var rpiIP = "rpiIP0";
@@ -12,7 +11,7 @@ var gvar = (function() {
   var wlcCPU = "wlcCPU0";
   var lastREC = "lastREC";
   var income = "income adsa";
-  var lastBoot = "lastBoot";
+  var uptime = "lastBoot";
   var vouchers = [];
 
   function setrpiIP(val) {
@@ -51,11 +50,11 @@ var gvar = (function() {
   function getwlcMEM() {
     return wlcMEM;
   };
-  function setlastBoot(val) {
-    lastBoot = val;
+  function setuptime(val) {
+    uptime = val;
   };
-  function getlastBoot() {
-    return lastBoot;
+  function getuptime() {
+    return uptime;
   };
   function setIncome(val) {
     lastlogin = val;
@@ -139,12 +138,12 @@ var gvar = (function() {
         return getlastREC();
       }
     },
-    lastBoot: {
+    uptime: {
       set:function(val) {
-        setlastBoot(val);
+        setuptime(val);
       },
       get:function(){
-        return getlastBoot();
+        return getuptime();
       }
     },
     income: {
@@ -178,7 +177,7 @@ indxrouter.get('/',function(req,res){
 		getwlcCPU: function () { return gvar.wlcCPU.get()},
 		getrpiMEM: function () { return gvar.rpiMEM.get()},
 		getwlcMEM: function () { return gvar.wlcMEM.get()},
-		getlastBoot: function () { return gvar.lastBoot.get()},
+		getuptime: function () { return gvar.uptime.get()},
 		getlastREC: function () { return gvar.lastREC.get()},
 		getincome: function () { return gvar.income.get()},
 		getvouchers: function () {return gvar.vouchers.get()}

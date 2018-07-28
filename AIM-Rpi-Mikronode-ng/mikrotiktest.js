@@ -1,7 +1,7 @@
 var MikroNode = require('mikronode-ng');
 var randomstring = require('randomstring');
 
-const RPI_IPADDR = '';
+const RPI_IPADDR = '131.101.179.4';
 const RPI_USERNAME = 'admin';
 const RPI_PASSWORD = '';
 
@@ -20,7 +20,7 @@ function mktkcmd(cmd,params,cb){
         try
         {
 			var chan = conn.openChannel();
-			chan.closeOnDone = true;
+			chan.closeOnDone = true;        
 			if(params){
 				console.log('here');
 				chan.write(['/ping','=address=4.2.2.2','=count=4'],function(c) {
@@ -43,7 +43,7 @@ function mktkcmd(cmd,params,cb){
 					});
 				});
 			}
-
+			
 		}catch(e){
 			cb(['err',e]);
 		}
