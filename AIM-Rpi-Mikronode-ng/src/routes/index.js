@@ -10,7 +10,7 @@ var gvar = (function() {
   var rpiCPU = "rpiCPU0";
   var wlcCPU = "wlcCPU0";
   var lastREC = "lastREC";
-  var income = "income adsa";
+  var income = 0;
   var uptime = "lastBoot";
   var vouchers = [];
 
@@ -57,7 +57,7 @@ var gvar = (function() {
     return uptime;
   };
   function setIncome(val) {
-    lastlogin = val;
+    income = val;
   };
   function getIncome() {
     return income;
@@ -180,10 +180,11 @@ indxrouter.get('/',function(req,res){
 		getuptime: function () { return gvar.uptime.get()},
 		getlastREC: function () { return gvar.lastREC.get()},
 		getincome: function () { return gvar.income.get()},
-		getvouchers: function () {return gvar.vouchers.get()}
+		getvouchers: function () {return gvar.vouchers.get()},
+    setuptime: function (value) { return gvar.uptime.set(value)},
 	}
   });
-});	
+});
 indxrouter.get('/settings',function(req,res,next){
   res.render('settings',{dashact:'',settact:'active',
 	  getvouchers: function () {return gvar.vouchers.get()}});
@@ -202,7 +203,7 @@ indxrouter.post('/upload',function(req,res,next){
 	}
 	console.log('+++  ',arrlines);
 	var vobjs = [];
-	
+
 	for(var i = 0;i < arrlines.length;i++){
 		if (arrlines[i].length>12){
 			var strsplit = arrlines[i].split(" ");
@@ -243,10 +244,10 @@ indxrouter.post('/settings',function(req,res,next){
 	console.log('...  ',req.body);
 	var ctr = req.body.numvoucher || 1;
 	var upttmp = req.body.TDD + 'd ' + req.body.THH + ':' + req.body.TMM + ':' + req.body.TSS;
-	
+
 	var vtype = req.body.inlineRadioOptions
 	for(i=1; i<=ctr;i++){
-		
+
 		var vtmp= "";
 		switch (vtype){
 			case 'lc':
@@ -261,7 +262,7 @@ indxrouter.post('/settings',function(req,res,next){
 		gvar.vouchers.push("add name="+vtmp+" limit-uptime="+upttmp+" limit-bytes-total="+req.body.trafficLim+"\n");
 	}
 	console.log('vouchers ', gvar.vouchers.get());
-	
+
   //res.render('settings',{dashact:'',settact:'active'});
   req.flash('success_msg','You are register and can now login');
   res.redirect('/settings');

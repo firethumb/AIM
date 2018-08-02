@@ -1,5 +1,5 @@
-//var max7219lib = require('node-max7219-led-matrix');
-//var max7219 = new max7219lib.max7219("/dev/spidev0.0");
+var max7219lib = require('node-max7219-led-matrix');
+var max7219 = new max7219lib.max7219("/dev/spidev0.0");
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -11,39 +11,48 @@ var session = require('express-session');
 var randomstring = require('randomstring');
 var os = require('os');
 var randomstring = require('randomstring');
+var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+
 const pisoval = 12;
 //const raspi = require('raspi');
 //const Serial = require('raspi-serial').Serial;
 var Gpio = require('onoff').Gpio
 var coin_waitflg = false;
 var cvaldly = false;
-var cval = 0;		
+var cval = 0;
 
 var gvar = require('./src/routes/index');
 
 const RPI_IPADDR = '131.101.179.4';
 const RPI_USERNAME = 'admin';
 const RPI_PASSWORD = '';
+const VoucherNum = 4;
 
 var mknodecmd = require('./mknodecmd');
 var hwhbactiveflg = false;
 var timeoutHndler = [];
 var cointHndler = [];
 
+sysinitfn();
 gethwheartbeats(10000);
-//getcoinINT();
-//console.log(os.cpus());
-/*
-raspi.init(() => {
-  var serial = new Serial();
-  serial.open(() => {
-    serial.write('Hello from raspi-serial');
-    serial.on('data', (data) => {
-      process.stdout.write(data);
-    });
-  });
-});
-*/
+getcoinINT();
+function sysinitfn(){
+	max7219.setBrightness(6);
+	max7219.setBrightness(6);
+	max7219.setBrightness(6);
+	max7219.clear();
+	max7219.cls();
+	//
+	coin_waitflg = false;
+	cvaldly = false;
+	cval = 0;
+	hwhbactiveflg = false;
+	timeoutHndler = [];
+	cointHndler = [];
+	gvar.gvar.income.set(0);
+}
 function genericArryParser(ARR,KEYS,option){
 	var tmparry = KEYS;
 	var result=[];
@@ -68,7 +77,7 @@ function genericArryParser(ARR,KEYS,option){
 			if(flg){
 				tmparry.splice(j,1);
 			}
-			
+
 		}
 	}else{
 		var stopflg = false;
@@ -85,14 +94,33 @@ function genericArryParser(ARR,KEYS,option){
 					stopflg = true;
 				}
 			}
-			
+
 		}
 	}
 	return result;
 }
+function setDispLEDS(valueobj){
+	var vararry=[];
+	if(typeof valueobj=== 'string'){
+		for(var i=0;i<valueobj.length;i++){
+			vararry.push(valueobj.charAt(i));
+		}
+	}else if(Object.prototype.toString.call(valueobj) === '[object Array]') {
+		vararry = valueobj;
+	}else{ return false};
+	try{
+		max7219.letterx(vararry[0],1);
+		max7219.letterx(vararry[1],2);
+		max7219.letterx(vararry[2],3);
+		max7219.letterx(vararry[3],4);
+	}catch(e){
+		return false;
+	}
+	return true;
+}
 
 function addvoucher(coinval){
-	var strRandom = randomstring.generate(4);
+	var strRandom = randomstring.generate(VoucherNum);
 	var uptlim = "";
 	var i=0;
 	console.log('coinval d1 ' + coinval);
@@ -106,10 +134,11 @@ function addvoucher(coinval){
 	}
 	uptlim = uptlim + pisoconversionfn(coinval);
 	console.log('kkkkkk    ' + strRandom + "  Lim  " + uptlim);
+	setDispLEDS(strRandom);
 	mknodecmd.GenUser(['=name=' + strRandom,'=limit-uptime='+uptlim]);
 }
 function pisoconversionfn(value){
-	if (value<=0){return '00:00:00';} 
+	if (value<=0){return '00:00:00';}
 	var tmpv = pisoval * value;
 	var i = 0;
 //	console.log('tmpv    d4 ' + tmpv);
@@ -131,11 +160,12 @@ function getcoinINT(){
 	button = new Gpio(17, 'in', 'both');
 	button.watch(function (err, value) {
 		if (err) throw err;
-		
+
 		console.log('GPIO coin: ' + value);
 		//LED.writeSync(value);
 		if(value == 1){
 			cval++;
+			setDispLEDS('#'+cval);
 		}
 		if(cvaldly){
 /*			if (coin_waitflg){
@@ -161,7 +191,7 @@ function cvaldlyfn(){
 	if (coin_waitflg){
 		clearTimeout(cointHndler);
 		cointHndler = setTimeout(coinwdlyfn,3000);
-			
+
 	}else{
 		coin_waitflg = true;
 		cointHndler = setTimeout(coinwdlyfn,3000);
@@ -170,9 +200,10 @@ function cvaldlyfn(){
 function coinwdlyfn(){
 	console.log('++++++++$$$$$$$$$$$$$$$$$$$$$$$$$$$$44 final cval:  ' + cval);
 	coin_waitflg = false;
+	var amt = gvar.gvar.income.get() + cval;
+	gvar.gvar.income.set(amt);
 	addvoucher(cval);
 	cval = 0;
-	
 }
 
 function check_HW_STAT(){
@@ -184,7 +215,7 @@ function check_HW_STAT(){
 
 	for(var i = 0, len = cpus.length; i < len; i++) {
 	//    console.log("CPU %s:", i);
-		
+
 		var cpu = cpus[i], total = 0;
 
 		for(var type in cpu.times) {
@@ -199,7 +230,7 @@ function check_HW_STAT(){
 	}
 	gvar.gvar.rpiCPU.set(cpustat);
 	//console.log('gvar', gvar.gvar.rpiCPU.get());
-	
+
 	//GET MK STATS
 	mknodecmd.mktkcmd('/system/resource/print',false,function(val){
 		var valarry = genericArryParser(val,['free-memory','cpu-load','uptime'],false);
@@ -217,7 +248,7 @@ function check_HW_STAT(){
 			}
 		}
 	});
-	
+
 }
 
 gvar.gvar.rpiIP.set(getrpiIPADDR(os.networkInterfaces()));
@@ -234,12 +265,6 @@ max7219.letterx('A',1);
 max7219.letterx('I',2);
 max7219.letterx('M',3);
 max7219.letterx(3,4);
-*/
-/*
-max7219.letterx('B',1);
-max7219.letterx('P',2);
-max7219.letterx('I',3);
-max7219.letterx('T',4);
 */
 expressSRV();
 //webserver();
@@ -263,14 +288,11 @@ function getrpiIPADDR(intobj){
 function expressSRV(){
 	var routes = require('./src/routes/index');
 	//Init app
-	var app = express();
-	var server = require('http').createServer(app);
-	var io = require('socket.io')(server);
 	app.set('views',path.join(__dirname,'./src/views'));
 	app.engine('handlebars',exphbs({defaultLayout:'../../src/views/layouts/layout'}));
 	app.set('view engine','handlebars');
 	//bodyParser Middleware
-	
+
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({extended:false}));
 	app.use(cookieParser());
@@ -311,15 +333,22 @@ function expressSRV(){
 	//
 	server.listen(3002);
 	console.log('starting sockets connection...');
-	io.on('connection',function(client){
+	/*
+	io.on('AIMSOCKET',function(client){
 		console.log('Client connected...');
 		client.on('join',function(data){
-			console.log(data);
-			client.emit('messages','hellow from server');
+			console.log('jjjj' +data);
+			client.emit('msgsrv2clnt','hellow from server');
 		});
-
 	});
-/*	
+	*/
+	io.on('connection', function(socket){
+	  console.log('a user connected');
+		socket.on('disconnect', function(){
+	    console.log('user disconnected');
+	  });
+	});
+/*
 	app.set('port',(process.env.PORT || 3003));
 	app.listen(app.get('port'),function() {
    	console.log('Server started on port ' + app.get('port'));
@@ -369,8 +398,10 @@ function gethwheartbeats(hwhbdelay,cb){
 		checkipsla(function(retval){
 			if(retval>1){
 				console.log('with internet');
+				io.emit('output',{ispSTAT:'with internet'});
 			}else{
 				console.log('without internet');
+				io.emit('output',{ispSTAT:'without internet'});
 			}
 		});
 		check_HW_STAT();
@@ -383,7 +414,7 @@ function gethwheartbeats(hwhbdelay,cb){
 }
 function parsemkdata(cmd,val){
 	var arrx = [];
-	if (cmd='/ping'){	
+	if (cmd='/ping'){
 		for(i=0;i<4;i++){
 			try{
 				var tmp =val[i][10].split('=avg-rtt=');
@@ -398,3 +429,14 @@ function parsemkdata(cmd,val){
 	}
 	return arrx;
 }
+/*
+raspi.init(() => {
+  var serial = new Serial();
+  serial.open(() => {
+    serial.write('Hello from raspi-serial');
+    serial.on('data', (data) => {
+      process.stdout.write(data);
+    });
+  });
+});
+*/

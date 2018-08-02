@@ -1,11 +1,12 @@
 <h3 class="page-header">Dashboard</h3>
+<h4 id="devstat"></h4>
 <div class="row">
   <div class="col-6 col-lg-4">
     <div class="card">
       <div class="card-block p-1 clearfix">
         <i class="fa fa-laptop bg-info p-1 font-2xl mr-1 float-left"></i>
-        <div class="h5 text-info mb-0 mt-h">{{getincome}}</div>
-        <div class="text-muted text-uppercase font-weight-bold font-xs">Income Counter</div>
+        <div class="h5 text-info mb-0 mt-h">{{getincome}} php</div>
+        <div class="text-muted text-uppercase font-weight-bold font-xs">Income</div>
       </div>
     </div>
   </div><!--/.col-->
@@ -57,7 +58,7 @@
     <div class="card">
       <div class="card-block p-1 clearfix">
         <i class="fa fa-bell bg-danger p-1 font-2xl mr-1 float-left"></i>
-        <div class="h5 text-primary mb-0 mt-h">{{getrpiCPU}} %</div>
+        <div class="h5 text-primary mb-0 mt-h">{{getrpiCPU}}</div>
         <div class="text-muted text-uppercase font-weight-bold font-xs">RPI CPU</div>
       </div>
     </div>
@@ -66,7 +67,7 @@
     <div class="card">
       <div class="card-block p-1 clearfix">
         <i class="fa fa-bell bg-danger p-1 font-2xl mr-1 float-left"></i>
-        <div class="h5 text-primary mb-0 mt-h">{{getwlcCPU}}</div>
+        <div class="h5 text-primary mb-0 mt-h">{{getwlcCPU}}  %</div>
           <div class="text-muted text-uppercase font-weight-bold font-xs">WLC CPU</div>
       </div>
     </div>
@@ -95,3 +96,27 @@
 </div>
 
 <p>Welcome to your Dashboard.</p>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  (function(){
+    var socket = io();
+    var element = function(id){
+      return document.getElementById(id);
+    }
+    var devstat = element('devstat');
+    var setdevStat = function(stat){
+    }
+    if (socket!== undefined){
+      console.log('Client is Connected to Sockets');
+      socket.on('output', function(obj){
+        console.log('test',obj);
+        if(obj.ispSTAT){
+            devstat.innerHTML = '(' + obj.ispSTAT +')';
+        }
+        if(obj.upTime){
+            {{{setuptime obj.upTime}}}
+        }
+      });
+    }
+  })();
+</script>
