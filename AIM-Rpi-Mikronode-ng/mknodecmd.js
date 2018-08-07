@@ -1,17 +1,15 @@
 var MikroNode = require('mikronode-ng');
 var randomstring = require('randomstring');
-const RPI_IPADDR = '131.101.179.4';
-const RPI_USERNAME = 'admin';
-const RPI_PASSWORD = '';
-
-
+const WLC_IPADDR = '131.101.179.4';
+const WLC_USERNAME = 'admin';
+const WLC_PASSWORD = '';
+/*
 var strRandom = randomstring.generate(4);
 var uptimelim = '03:00:00';
 var byteslim = '2M';
 var paramdata = ['=name=' + strRandom,'=limit-uptime='+uptimelim,'=limit-bytes-total='+byteslim];
-
-
-//GenUser(paramdata);
+GenUser(paramdata);
+*/
 
 function GenUser(userparams){
 	if(userparams){
@@ -24,7 +22,7 @@ function GenUser(userparams){
 	}
 }
 function mktkcmd(cmd,params,cb){
-	var connection = MikroNode.getConnection(RPI_IPADDR, RPI_USERNAME,RPI_PASSWORD);
+	var connection = MikroNode.getConnection(WLC_IPADDR, WLC_USERNAME,WLC_PASSWORD);
     connection.closeOnDone = true;
     connection.connect(function(conn) {
         try
@@ -50,7 +48,7 @@ function mktkcmd(cmd,params,cb){
 					});
 				});
 			}
-			
+
 		}catch(e){
 			cb(['err',e]);
 		}
@@ -58,7 +56,7 @@ function mktkcmd(cmd,params,cb){
 }
 function parsemkdata(cmd,val){
 	var arrx = [];
-	if (cmd='/ping'){	
+	if (cmd='/ping'){
 		for(i=0;i<4;i++){
 			try{
 				var tmp =val[i][10].split('=avg-rtt=');

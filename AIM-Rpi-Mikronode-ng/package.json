@@ -4,11 +4,13 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack main.js dist/bundle.js",
+	  "build:prod": "webpack main.js dist/bundle.js -p"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/firethumb/AIM/tree/master/AIM-Rpi-Mikronode-ng"
+    "url": "https://github.com/firethumb/AIM/tree/master/AIM-Rpi-Mikrone-ng"
   },
   "keywords": [
     "mikronode-ng",
@@ -37,6 +39,7 @@
     "raspi-serial": "^5.0.0",
     "request": "^2.87.0",
     "socket.io": "^2.1.1",
-    "spi": "^0.2.0"
+    "spi": "^0.2.0",
+    "ntp-client":"*"
   }
 }
