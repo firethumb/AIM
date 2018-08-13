@@ -5,7 +5,56 @@
   "options": {
     "validateUpsert": true
   },
-  "properties": {},
+  "properties": {
+    "DeviceUId": {
+      "type": "VARCHAR", 
+      "required": "true"
+    },
+    "UId": {
+      "type": "VARCHAR", 
+      "required": "true"
+    },
+    "DeviceLocation": {
+      "type": "VARCHAR", 
+      "required": "true"
+    },
+    "RpiIPAddress": {
+      "type": "VARCHAR", 
+      "required": "true"
+    },
+    "GrossSales": {
+      "type": "INT", 
+      "required": "true"
+    },
+    "RpiDeviceMem": {
+      "type": "VARCHAR", 
+      "required": "true"
+    },
+    "RouterDeviceMem": {
+      "type": "VARCHAR", 
+      "required": "true"
+    },
+    "RpiCPU": {
+      "type": "VARCHAR", 
+      "required": "true"
+    },
+    "RouterCPU": {
+      "type": "VARCHAR", 
+      "required": "true"
+    },
+    "RpiBootDateTime": {
+      "type": "DATETIME", 
+      "required": "true"
+    },
+    "DeviceUpdate": {
+      "type": "VARCHAR", 
+      "required": "true"
+    },
+    "SalesResetDateTime": {
+      "type": "DATETIME", 
+      "required": "true"
+    }
+  },
   "validations": [],
   "relations": {},
   "acls": [],
