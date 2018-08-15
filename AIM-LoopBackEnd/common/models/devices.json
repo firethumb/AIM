@@ -7,51 +7,51 @@
   },
   "properties": {
     "DeviceUId": {
-      "type": "VARCHAR", 
+      "type": "String", 
       "required": "true"
     },
     "UId": {
-      "type": "VARCHAR", 
+      "type": "String", 
       "required": "true"
     },
     "DeviceLocation": {
-      "type": "VARCHAR", 
+      "type": "String", 
       "required": "true"
     },
     "RpiIPAddress": {
-      "type": "VARCHAR", 
+      "type": "String", 
       "required": "true"
     },
     "GrossSales": {
-      "type": "INT", 
+      "type": "Number", 
       "required": "true"
     },
     "RpiDeviceMem": {
-      "type": "VARCHAR", 
+      "type": "String", 
       "required": "true"
     },
     "RouterDeviceMem": {
-      "type": "VARCHAR", 
+      "type": "String", 
       "required": "true"
     },
     "RpiCPU": {
-      "type": "VARCHAR", 
+      "type": "String", 
       "required": "true"
     },
     "RouterCPU": {
-      "type": "VARCHAR", 
+      "type": "String", 
       "required": "true"
     },
     "RpiBootDateTime": {
-      "type": "DATETIME", 
+      "type": "DATE", 
       "required": "true"
     },
     "DeviceUpdate": {
-      "type": "VARCHAR", 
+      "type": "String", 
       "required": "true"
     },
     "SalesResetDateTime": {
-      "type": "DATETIME", 
+      "type": "DATE", 
       "required": "true"
     }
   },

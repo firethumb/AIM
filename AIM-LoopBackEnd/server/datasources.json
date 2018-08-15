@@ -4,7 +4,7 @@
     "connector": "memory"
   },
  "aim-app":{
-   "host": "/cloudsql/projectaim-206706:asia-southeast1:mysqldb1",
+   "host": "localhost",
    "user": "aim-app",
    "port": 3306,
    "database": "AIM",
