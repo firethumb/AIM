@@ -18,15 +18,15 @@
         "nullable":"N"
        }
     },
-    "UId": {
+    "Id": {
       "type": "String", 
       "required": "true",
-      "length":"45",
+      "length":"50",
       "mysql":
        {
-        "columnName":"UId",
+        "columnName":"Id",
         "dataType":"VARCHAR",
-        "dataLength":45,
+        "dataLength":50,
         "nullable":"N"
        }
     },
