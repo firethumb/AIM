@@ -14,14 +14,14 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "aim-app"
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "aim-app",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "aim-app",
     "public": false
   },
   "RoleMapping": {
