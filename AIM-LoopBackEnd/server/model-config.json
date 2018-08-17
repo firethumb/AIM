@@ -21,7 +21,7 @@
     "public": false
   },
   "ACL": {
-    "dataSource": "aim-app",
+    "dataSource": "db",
     "public": false
   },
   "RoleMapping": {
