@@ -25,21 +25,21 @@
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "aim-app",
     "public": false,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "aim-app",
     "public": false
   },
   "Message": {
     "dataSource": null
   },
   "Devices": {
-    "dataSource": "db",
+    "dataSource": "aim-app",
     "public": true
   }
 }
