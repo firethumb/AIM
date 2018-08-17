@@ -54,6 +54,18 @@
         "nullable":"N"
        }
     },
+    "RouterIPAddress": {
+      "type": "String", 
+      "required": "true",
+       "length":"20",
+      "mysql":
+       {
+        "columnName":"RouterIPAddress",
+        "dataType":"VARCHAR",
+        "dataLength":20,
+        "nullable":"N"
+       }
+    },
     "GrossSales": {
       "type": "Number", 
       "required": "true",
