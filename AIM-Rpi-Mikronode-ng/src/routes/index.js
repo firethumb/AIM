@@ -182,6 +182,9 @@ indxrouter.get('/',function(req,res){
 		getincome: function () { return gvar.income.get()},
 		getvouchers: function () {return gvar.vouchers.get()},
     setuptime: function (value) { return gvar.uptime.set(value)},
+    setincome: function (value) { return gvar.income.set(value)},
+    setwlcCPU: function (value) { return gvar.wlcCPU.set(value)},
+    setwlcMEM: function (value) { return gvar.wlcMEM.set(value)},
 	}
   });
 });
@@ -194,7 +197,7 @@ indxrouter.post('/upload',function(req,res,next){
 	console.log('...  ',req.body.comment);
 	var arrlines = req.body.comment.split('\r\n');
 	for(var i = 0;i < arrlines.length;i++){
-		var tmp =arrlines[i].replace(',','');
+		var tmp =arrlines[i].replace(/,/g,'');
 		tmp=tmp.replace('add name=','');
 		tmp=tmp.replace('limit-uptime=','');
 		tmp=tmp.replace('limit-bytes-total=','');

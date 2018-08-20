@@ -1,4 +1,7 @@
 appendlogs('program starting...\n');
+
+load_initconfig('key');
+return null;
 var ntpClient = require('ntp-client');
 var max7219lib = require('node-max7219-led-matrix');
 var max7219 = new max7219lib.max7219("/dev/spidev0.0");
@@ -26,7 +29,7 @@ var coinAcceptDly = 8000;
 var okBtnDly = 500;
 var flgblinkdisp1 = false;
 var disp1Tflg = false;
-var HTTP_PORT = 80;
+var HTTP_PORT = 8080;
 //const raspi = require('raspi');
 //const Serial = require('raspi-serial').Serial;
 var Gpio = require('onoff').Gpio
@@ -43,6 +46,7 @@ get_sysID("Serial",true,function(cbval){
 	appendlogs(cbval + '\n');
 	console.log('val :' +cbval);
 });
+
 sysinitfn();
 gethwheartbeats(20000);
 getcoinINT();
@@ -56,7 +60,7 @@ function sysinitfn(){
 	okBtnDly = 500;
 	flgblinkdisp1 = false;
 	disp1Tflg = false;
-	HTTP_PORT = 80;
+	HTTP_PORT = 8080;
 	max7219.setBrightness(6);
 	max7219.setBrightness(6);
 	max7219.setBrightness(6);
@@ -76,6 +80,47 @@ function sysinitfn(){
 	appendlogs('Set coinAcceptDly: ' + coinAcceptDly);
 	appendlogs('Set income counter to 0.');
 	max7219.cls();
+}
+function adminconfigParser(ARR,KEYS,OPTION){		//need Arry element set toUpperCase
+	var tmparry = ARR;
+	var result;
+	if (OPTION==='json'){
+		result='{';
+	}else {
+		result=[];
+	}
+		var flg = false;
+		console.log('tmparry',tmparry);
+		console.log('KEYS',KEYS	);
+		for(var i=0;i<KEYS.length;i++){
+			var j=0;
+			flg = false;
+			for (;j<tmparry.length;j++){
+				if(tmparry[j].indexOf(KEYS[i])!==-1){
+					var tmp = tmparry[j].split('=');
+					if (OPTION==='json'){
+						if ((j+1)==tmparry.length){
+							result = result + '"' + tmp[0] + '":' + '"' + tmp[1] + '"}';
+							return JSON.parse(result);
+						}else {
+							result = result + '"' + tmp[0] + '":' + '"' + tmp[1] + '",';
+						}
+					}else{
+						if(tmp[1]!==undefined){
+							result.push(tmp[1]);
+						}else{
+							result.push(-1);
+						}
+						flg = true;
+						break;
+					}
+				}
+			}
+			if(flg){
+				tmparry.splice(j,1);
+			}
+		}
+	return result;
 }
 function genericArryParser(ARR,KEYS,option){
 	var tmparry = KEYS;
@@ -101,7 +146,6 @@ function genericArryParser(ARR,KEYS,option){
 			if(flg){
 				tmparry.splice(j,1);
 			}
-
 		}
 	}else{
 		var stopflg = false;
@@ -117,9 +161,9 @@ function genericArryParser(ARR,KEYS,option){
 					stopflg = true;
 				}
 			}
-
 		}
 	}
+	console.log('====== genericArryParser  ',result);
 	return result;
 }
 function setDispLEDS(valueobj,clsflg){
@@ -242,6 +286,7 @@ function coinwdlyfn(){
 	okbtn = true;
 	var amt = gvar.gvar.income.get() + cval;
 	gvar.gvar.income.set(amt);
+	io.emit('updates',{income:amt});
 	addvoucher(cval);
 	cval = 0;
 }
@@ -262,10 +307,16 @@ function check_HW_STAT(){
 	gvar.gvar.rpiCPU.set(cpustat);
 	//GET MK STATS
 	mknodecmd.mktkcmd('/system/resource/print',false,function(val){
-		var valarry = genericArryParser(val,['free-memory','cpu-load','uptime'],false);
-		gvar.gvar.wlcCPU.set(valarry[2]);
-		gvar.gvar.wlcMEM.set(valarry[1]);
+//		console.log('raw resource',val);
+		var valarry = genericArryParser(val,['free-memory','total-memory','cpu-load','uptime'],false);
+		var wlcmem = valarry[1];
+		var wlcmemt = valarry[2];
+		gvar.gvar.wlcCPU.set(valarry[3]);
+		gvar.gvar.wlcMEM.set(wlcmem + '  : ' + Math.round(100 * wlcmem / wlcmemt) + '% Used');
 		gvar.gvar.uptime.set(valarry[0]);
+
+
+
 	});
 	mknodecmd.mktkcmd('/ip/address/print',false,function(val){
 		var valarry = genericArryParser(val,'ether1','section');
@@ -307,6 +358,49 @@ function appendlogs(value){
 			return true;
 		});
 	});
+}
+function load_initconfig(initKeyVAR,){
+	const filepath ='/home/test/var';
+	const filename = 'system.ini'
+	const fs = require('fs');
+	var configData = [];
+	if (initKeyVAR===undefined){
+		return null;
+	}
+	try{
+		var promise = new Promise(function(resolve,reject){
+			fs.readFile(filepath + '/' + filename, 'utf8', function(err, data) {
+				if (err) throw err;
+				var tmpdata = data.split('\n');
+				console.log('ctr: ' + tmpdata.length);
+				if(tmpdata.length>2){
+					var tmpv1;
+					var tmpv2;
+					for(var i = 0;i<tmpdata.length;i++){
+						if(tmpdata[i].length>2){
+							tmpv1 = tmpdata[i].replace(/,/g,'');
+							tmpv2 = tmpv1.replace(/;/g,'');
+							tmpv1 = tmpv2.replace(/"/g,'');
+							tmpv2 = tmpv1.replace(/'/g,'');
+							tmpv1 = tmpv2.replace(/`/g,'');
+							tmpv2 = tmpv1.replace(/ /g,'');
+							configData.push(tmpv2);
+						}
+					}
+					resolve(configData);
+				}else{
+					resolve(-1);
+				}
+		  });
+		});
+		promise.then(function(valarry){
+			console.log('valarry ',adminconfigParser(valarry,['coinAcceptDly','okBtnDly','HTTP_PORT','coinInputDly','cval','ispactvflg','ntpIP','wlcIP','unicoinslot','ipsla1','ipsla2','ipsla3'],'json'));
+		});
+			return null;
+	}catch(e){
+		console.log('err ', e);
+		return null;
+	}
 }
 function get_sysID(greptoken, parseflg,cb){
 	const exec = require( 'child_process' ).exec;
@@ -509,7 +603,7 @@ function blinkdisp1(msg,delay){
 		}
 	},delay);
 }
-function parsemkdata(cmd,val){
+function parseata(cmd,val){
 	var arrx = [];
 	if (cmd='/ping'){
 		for(i=0;i<4;i++){
