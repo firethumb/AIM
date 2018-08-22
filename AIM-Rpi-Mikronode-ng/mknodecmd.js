@@ -1,8 +1,8 @@
 var MikroNode = require('mikronode-ng');
 var randomstring = require('randomstring');
-const WLC_IPADDR = '131.101.179.4';
-const WLC_USERNAME = 'admin';
-const WLC_PASSWORD = '';
+var WLC_IPADDR = '131.101.179.4';
+var WLC_USERNAME = 'admin';
+var WLC_PASSWORD = '';
 /*
 var strRandom = randomstring.generate(4);
 var uptimelim = '03:00:00';
@@ -22,36 +22,40 @@ function GenUser(userparams){
 	}
 }
 function mktkcmd(cmd,params,cb){
-	var connection = MikroNode.getConnection(WLC_IPADDR, WLC_USERNAME,WLC_PASSWORD);
+	try {
+		var connection = MikroNode.getConnection(WLC_IPADDR, WLC_USERNAME,WLC_PASSWORD);
+	} catch (e) {
+		console.log('err ', e);
+	}
     connection.closeOnDone = true;
     connection.connect(function(conn) {
         try
         {
-			var chan = conn.openChannel();
-			chan.closeOnDone = true;
-			if(params){
-				chan.write([cmd].concat(params), function(c) {
+					var chan = conn.openChannel();
+					chan.closeOnDone = true;
+					if(params){
+						chan.write([cmd].concat(params), function(c) {
+									c.on('trap', function(data) {
+										cb(['trap',data]);
+									});
+									c.on('done', function(data) {
+										cb(parsemkdata(cmd,data));
+									});
+								});
+					}else{
+						chan.write(cmd, function(c) {
 							c.on('trap', function(data) {
 								cb(['trap',data]);
 							});
 							c.on('done', function(data) {
-								cb(parsemkdata(cmd,data));
+								cb(data);
 							});
 						});
-			}else{
-				chan.write(cmd, function(c) {
-					c.on('trap', function(data) {
-						cb(['trap',data]);
-					});
-					c.on('done', function(data) {
-						cb(data);
-					});
-				});
-			}
-
-		}catch(e){
-			cb(['err',e]);
-		}
+					}
+				}catch(e){
+					console.log('error ',e);
+					cb(['err',e]);
+				}
     });
 }
 function parsemkdata(cmd,val){

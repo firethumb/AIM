@@ -2,7 +2,9 @@ var randomstring = require('randomstring');
 var express = require('express');
 var mknodecmd = require('../../mknodecmd');
 var indxrouter = express.Router();
-var gvar = (function() {
+var gvar = require('../models/gvar').gvar
+/*
+(function() {
   var rpiIP = "rpiIP0";
   var wlcIP = "wlcIP0";
   var rpiMEM = "rpiMEM0";
@@ -167,7 +169,7 @@ var gvar = (function() {
     }
   };
 })();
-
+*/
 // Get Homepage
 indxrouter.get('/',function(req,res){
   res.render('index',{dashact:'active',settact:'',helpers: {
