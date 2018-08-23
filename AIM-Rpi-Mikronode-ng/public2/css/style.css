@@ -1,0 +1,146 @@
+
+
+
+.logo-portal {
+  margin-right: 70%;
+  color:  #e6e6d4 !important;
+}
+
+.navbar-nav a {
+  color:  #e6e6d4 !important;
+
+}
+
+.nav-part {
+  background-color: #005874 !important;
+}
+
+
+.header {
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-bottom: 40px;
+}
+.data-test {
+  background-color: #1c819e;
+  height: 200px;
+  padding-top: 7% !important;
+  border-top-left-radius: 5px;
+}
+
+.data-test:before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  border-top: 80px solid white;
+  border-left: 80px solid #1c819e ;
+  width: 0;
+}
+
+.design-1 .col p {
+  color: #ffbe00;
+}
+
+.design-1 .col i {
+  color: #e6e6d4;
+}
+
+.design-1 .col .text-info {
+  color: #e6e6d4 !important;
+  padding-top: 10px;
+}
+
+.page-footer {
+  margin-top: 100px !important;
+  background-color: #005874 !important;
+  padding-right: 0px !important;
+  color:  #e6e6d4 !important;
+}
+
+.page-footer a {
+  color: #ffbe00!important;
+}
+
+.right-content {
+  padding-right: 0px !important;
+}
+
+.dash-content {
+  background-color: #1c819e;
+   color: #e6e6d4;
+   border-radius: 4px;
+   padding: 34px 10px 30px 10px !important;
+}
+/* Setting page start */
+ .info-str {
+  background-color: #1c819e;
+  height: 100%;
+  padding-top: 30px !important;
+  border-top-left-radius: 5px;
+}
+
+ .info-str:before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  border-top: 80px solid white;
+  border-left: 80px solid #1c819e ;
+  width: 0;
+
+}
+
+.setting .container{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.setting .row .info-str .content h4{
+  color: #e6e6d4; 
+  border-bottom: #e6e6d4 1px solid;
+  padding-bottom: 22px;
+}
+
+
+.setting .row .info-str .content .input-voucher .row .col input{
+  width: 50%;
+  border-radius: 5px;
+}
+
+.setting #selectTSS{
+  width: 50%;
+  border-radius: 5px;
+}
+
+.info-str .input-voucher h5 {
+  color: #e6e6d4; 
+}
+
+.info-str .input-voucher .radio-btn label {
+  font-size: 20px;
+  color: #e6e6d4; 
+}
+
+.info-str .input-voucher .basic label {
+  color: #e6e6d4; 
+  font-size: 20px;
+}
+
+.info-str h4 {
+  color: #e6e6d4; 
+}
+
+.info-str h4 {
+  color: #e6e6d4; 
+}
+
+.info-str button.generate {
+  background-color: #005874 !important;
+  border: none;
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+}
+
+.info-str button:hover {
+  background-color: #459fb8 !important;
+
+}

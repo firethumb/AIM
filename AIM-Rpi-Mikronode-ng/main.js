@@ -2,7 +2,7 @@ var ntpClient = require('ntp-client');
 const VoucherNum = 4;
 const logfpath = "/tmp";
 const logfname = "aim-hw.log";
-appendlogs('---------------------------------------------------------------------\n');
+appendlogs('-------------------------------------------------------------------\n');
 appendlogs('***program starting...\n');
 const filepath = '/home/test/var';
 const filename = 'system.ini'
@@ -142,7 +142,7 @@ function checkWLCIP(IPADDR,counts,cb){
 	}
 }
 function sysinitfn(initUserVal){
-	appendlogs('initializing system variables..');
+	appendlogs('initializing system variables..');//to be added in system.ini
 	if (initUserVal.wlcIP){
 		if(initUserVal.wlcIPcounts){
 			checkWLCIP(initUserVal.wlcIP,initUserVal.wlcIPcounts,function(cbval){
@@ -537,9 +537,18 @@ function getrpiIPADDR(intobj){
 function expressSRV(){
 	appendlogs('Starting Web Service..');
 	var routes = require('./src/routes/index');
+	var themeLayout = 'layout';
+	var pubsource = 'public';
+	if(guivar.skin.get()==2){
+		themeLayout = 'l2';
+		pubsource = 'public2';
+	}else {
+		themeLayout = 'layout';
+		pubsource = 'public';
+	}
 	//Init app
 	app.set('views',path.join(__dirname,'./src/views'));
-	app.engine('handlebars',exphbs({defaultLayout:'../../src/views/layouts/layout'}));
+	app.engine('handlebars',exphbs({defaultLayout:'../../src/views/layouts/' + themeLayout}));
 	app.set('view engine','handlebars');
 	//bodyParser Middleware
 
@@ -547,7 +556,7 @@ function expressSRV(){
 	app.use(bodyParser.urlencoded({extended:false}));
 	app.use(cookieParser());
 	//Set Static Folder
-	app.use(express.static(path.join(__dirname,'public')));
+	app.use(express.static(path.join(__dirname,pubsource)));
 	//Express session
 	app.use(session({
 		secret: 'secret',

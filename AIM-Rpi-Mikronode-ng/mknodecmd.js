@@ -48,7 +48,7 @@ function mktkcmd(cmd,params,cb){
 								cb(['trap',data]);
 							});
 							c.on('done', function(data) {
-								cb(data);
+								cb(parsemkdata(cmd,data));
 							});
 						});
 					}
