@@ -1,23 +1,45 @@
-appendlogs('program starting...\n');
 var ntpClient = require('ntp-client');
-var max7219lib = require('node-max7219-led-matrix');
-var max7219 = new max7219lib.max7219("/dev/spidev0.0");
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var exphbs = require ('express-handlebars');
-var expressValidator =  require('express-validator');
-var flash = require('connect-flash');
-var session = require('express-session');
-var randomstring = require('randomstring');
-var os = require('os');
-var randomstring = require('randomstring');
-var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+const VoucherNum = 4;
+const logfpath = "/tmp";
+const logfname = "aim-hw.log";
+appendlogs('-------------------------------------------------------------------\n');
+appendlogs('***program starting...\n');
+const filepath = '/home/test/var';
+const filename = 'system.ini'
+const fs = require('fs');
+try {
+	var max7219lib = require('node-max7219-led-matrix');
+	var max7219 = new max7219lib.max7219("/dev/spidev0.0");
+	var express = require('express');
+	var path = require('path');
+	var cookieParser = require('cookie-parser');
+	var bodyParser = require('body-parser');
+	var exphbs = require ('express-handlebars');
+	var expressValidator =  require('express-validator');
+	var flash = require('connect-flash');
+	var session = require('express-session');
+	var randomstring = require('randomstring');
+	var os = require('os');
+	var sys = require('util')
+	var randomstring = require('randomstring');
+	var app = express();
+	var server = require('http').createServer(app);
+	var io = require('socket.io')(server);
+	var Gpio = require('onoff').Gpio
+	var gvar = require('./src/models/gvar').gvar;
+	var guivar = require('./src/models/gvar').guivar;
+	var sysvar = require('./src/models/gvar').sysvar;
+	var mknodecmd = require('./mknodecmd');
+	//const raspi = require('raspi');
+	//const Serial = require('raspi-serial').Serial;
+} catch (e) {
+	errlogging(e);
+	appendlogs('***Exiting program...\n');
+	return null;
+}
 var ispactvflg = false;
-var ntpIP = "131.101.1.199";
+var ledDispB = 6;
+var ntpIP = "";
 var okbtn = false;
 const pisoval = 12;
 var daythreshold = 20;
@@ -26,16 +48,10 @@ var coinAcceptDly = 8000;
 var okBtnDly = 500;
 var flgblinkdisp1 = false;
 var disp1Tflg = false;
-var HTTP_PORT = 80;
-//const raspi = require('raspi');
-//const Serial = require('raspi-serial').Serial;
-var Gpio = require('onoff').Gpio
+var httpPORT = 8080;
 var coin_waitflg = false;
 var cvaldly = false;
 var cval = 0;
-var gvar = require('./src/routes/index');
-const VoucherNum = 4;
-var mknodecmd = require('./mknodecmd');
 var hwhbactiveflg = false;
 var timeoutHndler = [];
 var cointHndler = [];
@@ -43,23 +59,140 @@ get_sysID("Serial",true,function(cbval){
 	appendlogs(cbval + '\n');
 	console.log('val :' +cbval);
 });
-sysinitfn();
-gethwheartbeats(20000);
-getcoinINT();
-expressSRV();
-appendlogs('Application Ready');
+var progPromise = new Promise(function(resolve,reject){
+	load_initconfig(function(cval){
+		sysinitfn(cval);
+		resolve(null);
+	});
+});
+progPromise.then(function(v){
+	main();
+});
+appendlogs('***Program Loaded!');
+function main(){
+	try {
+		appendlogs('Starting Application...');
+		gethwheartbeats(20000);
+		getcoinINT();
+		expressSRV();
+	} catch (e) {
+		errlogging(e,'***Server Error: ');
+		return null;
+	}
+}
 //!------------------------------------------------------
-function sysinitfn(){
-	appendlogs('initializing..');
-	coinInputDly = 4000;
-	coinAcceptDly = 8000;
-	okBtnDly = 500;
+function getdefgw(cb){
+	var exec = require('child_process').exec;
+	function puts(error, stdout, stderr) {
+		if (error) throw error;
+		if (stderr) throw stderr;
+		console.log('stdout',stdout);
+		//var retval = stdout.slice(stdout.indexOf("received,")+10,stdout.indexOf("packet "));
+		//cb(retval);
+		var arry = stdout.split('\n');
+		for(var i=0;i<arry.length;i++){
+			var tmparr1='  ';
+			var tmparr2=arry[i];
+			var flg=false;
+			if(tmparr2.indexOf('UG')!=-1){
+				for(var j=0;j<100;j++){
+					if(tmparr1.indexOf('  ')!=-1){
+						tmparr1=tmparr2.replace(/  /g,' ');
+					}
+					else{
+						flg=true;
+						break;
+					}
+					tmparr2=tmparr1;
+				}
+				if(flg){
+					var rst=tmparr1.split(' ');
+					console.log('rst ',rst);
+					cb(rst[1]);
+					break;
+				}
+			}
+		}
+	}
+	try {
+		exec('route -n', puts);
+	} catch (e) {
+		cb(-1);
+	}
+}
+function checkWLCIP(IPADDR,counts,cb){
+	var exec = require('child_process').exec;
+	function puts(error, stdout, stderr) {
+		if (error) throw error;
+		if (stderr) throw stderr;
+		var retval = stdout.slice(stdout.indexOf("received,")+10,stdout.indexOf("packet "));
+		if(retval.trim()=='100%'){
+			getdefgw(function(cbval){
+				cb(cbval);
+			});
+		}else{
+			cb(IPADDR);
+		}
+	}
+	if(!counts){ counts = 3; }
+	try {
+		exec("ping -c " +counts + " "+IPADDR, puts);
+	} catch (e) {
+		cb(-1);
+	}
+}
+function sysinitfn(initUserVal){
+	appendlogs('initializing system variables..');//to be added in system.ini
+	if (initUserVal.wlcIP){
+		if(initUserVal.wlcIPcounts){
+			checkWLCIP(initUserVal.wlcIP,initUserVal.wlcIPcounts,function(cbval){
+				sysvar.wlcIP.set(cbval);
+			});
+		}else {
+			checkWLCIP(initUserVal.wlcIP,3,function(cbval){
+				sysvar.wlcIP.set(cbval);
+			});
+		}
+	}else {
+		sysvar.wlcIP.set('192.168.88.1');
+	}
+
+	if (initUserVal.guiSkin){
+		guivar.skin.set(initUserVal.guiSkin);
+	}else {
+		guivar.skin.set(0);
+	}
+	if(initUserVal.coinInputDly){
+		coinInputDly = initUserVal.coinInputDly;
+	}else {
+			coinInputDly = 4000;
+	}
+	if(initUserVal.coinAcceptDly){
+		coinAcceptDly = initUserVal.coinAcceptDly
+	}else {
+			coinAcceptDly = 8000;
+	}
+	if(initUserVal.okBtnDly){
+		okBtnDly = initUserVal.okBtnDly
+	}else {
+		okBtnDly = 500;
+	}
 	flgblinkdisp1 = false;
 	disp1Tflg = false;
-	HTTP_PORT = 80;
-	max7219.setBrightness(6);
-	max7219.setBrightness(6);
-	max7219.setBrightness(6);
+	if(initUserVal.httpPORT){
+		httpPORT = initUserVal.httpPORT
+	}else {
+		httpPORT = 8080;
+	}
+	if(initUserVal.ledDispB){
+		ledDispB = initUserVal.ledDispB;
+	}else {
+		ledDispB = 6;
+	}
+	max7219.setBrightness(ledDispB);
+	max7219.setBrightness(ledDispB);
+	max7219.setBrightness(ledDispB);
+	appendlogs('Set LED Brightness: ' + ledDispB);
 	max7219.clear();
 	setDispLEDS('init',true);
 	coin_waitflg = false;
@@ -68,14 +201,33 @@ function sysinitfn(){
 	hwhbactiveflg = false;
 	timeoutHndler = [];
 	cointHndler = [];
-	gvar.gvar.income.set(0);
+	gvar.income.set(0);
 	ispactvflg = false;
-	gvar.gvar.rpiIP.set(getrpiIPADDR(os.networkInterfaces()));
-	ntpIP = "131.101.1.199";
+	gvar.rpiIP.set(getrpiIPADDR(os.networkInterfaces()));
+	if(initUserVal.ntpIP){
+		ntpIP = initUserVal.ntpIP
+	}else {
+		ntpIP = "0.asia.pool.ntp.org";
+	}
 	appendlogs('Set NTP IP: ' + ntpIP);
 	appendlogs('Set coinAcceptDly: ' + coinAcceptDly);
 	appendlogs('Set income counter to 0.');
 	max7219.cls();
+}
+function adminconfigParser(ARR){		//need Arry element set toUpperCase
+	var tmparry = ARR;
+	var result = '{';
+	for (var j=0;j<tmparry.length;j++){
+			var tmp = tmparry[j].split('=');
+				if ((j+1)==tmparry.length){
+					result = result + '"' + tmp[0] + '":' + '"' + tmp[1] + '"}';
+					var jj = JSON.parse(result);
+					break;
+				}else {
+					result = result + '"' + tmp[0] + '":' + '"' + tmp[1] + '",';
+				}
+	}
+	return JSON.parse(result);
 }
 function genericArryParser(ARR,KEYS,option){
 	var tmparry = KEYS;
@@ -101,7 +253,6 @@ function genericArryParser(ARR,KEYS,option){
 			if(flg){
 				tmparry.splice(j,1);
 			}
-
 		}
 	}else{
 		var stopflg = false;
@@ -117,9 +268,9 @@ function genericArryParser(ARR,KEYS,option){
 					stopflg = true;
 				}
 			}
-
 		}
 	}
+	console.log('====== genericArryParser  ',result);
 	return result;
 }
 function setDispLEDS(valueobj,clsflg){
@@ -140,6 +291,7 @@ function setDispLEDS(valueobj,clsflg){
 		max7219.letterx(vararry[2],3);
 		max7219.letterx(vararry[3],4);
 	}catch(e){
+		errlogging(e,'***Error: ');
 		return false;
 	}
 	return true;
@@ -240,8 +392,9 @@ function coinwdlyfn(){
 	setDispLEDS('^'+cval,true);
 	coin_waitflg = false;
 	okbtn = true;
-	var amt = gvar.gvar.income.get() + cval;
-	gvar.gvar.income.set(amt);
+	var amt = gvar.income.get() + cval;
+	gvar.income.set(amt);
+	io.emit('updates',{income:amt});
 	addvoucher(cval);
 	cval = 0;
 }
@@ -250,7 +403,7 @@ function check_HW_STAT(){
 	var cpustat = "CPU's: ";
 	var memt = os.totalmem();
 	var memf = os.freemem();
-	gvar.gvar.rpiMEM.set(memf + '  : ' + Math.round(100 * memf / memt) + '% Used');
+	gvar.rpiMEM.set(memf + '  : ' + Math.round(100 * memf / memt) + '% Used');
 
 	for(var i = 0, len = cpus.length; i < len; i++) {
 		var cpu = cpus[i], total = 0;
@@ -259,20 +412,22 @@ function check_HW_STAT(){
 		}
 			cpustat += '[' + i + ']: ' + (100 - Math.round(100 * cpu.times['idle'] / total)) + '%  ';
 	}
-	gvar.gvar.rpiCPU.set(cpustat);
+	gvar.rpiCPU.set(cpustat);
 	//GET MK STATS
 	mknodecmd.mktkcmd('/system/resource/print',false,function(val){
-		var valarry = genericArryParser(val,['free-memory','cpu-load','uptime'],false);
-		gvar.gvar.wlcCPU.set(valarry[2]);
-		gvar.gvar.wlcMEM.set(valarry[1]);
-		gvar.gvar.uptime.set(valarry[0]);
+		var valarry = genericArryParser(val,['free-memory','total-memory','cpu-load','uptime'],false);
+		var wlcmem = valarry[1];
+		var wlcmemt = valarry[2];
+		gvar.wlcCPU.set(valarry[3]);
+		gvar.wlcMEM.set(wlcmem + '  : ' + Math.round(100 * wlcmem / wlcmemt) + '% Used');
+		gvar.uptime.set(valarry[0]);
 	});
 	mknodecmd.mktkcmd('/ip/address/print',false,function(val){
 		var valarry = genericArryParser(val,'ether1','section');
 //		console.log('asdf2  ',valarry);
 		for(var i=0;i<valarry.length;i++){
 			if (valarry[i].indexOf('address')!==-1){
-				gvar.gvar.wlcIP.set(valarry[i].split('=address=')[1]);
+				gvar.wlcIP.set(valarry[i].split('=address=')[1]);
 				break;
 			}
 		}
@@ -289,6 +444,7 @@ function getNTPTIME(ntpsrvip,cb){
 					}
 		});
 	}catch(e){
+		errlogging(e,'***Error: ');
 		cb(Date(Date.now()).toLocaleString());
 	}
 }
@@ -299,14 +455,52 @@ function appendlogs(value){
 		});
 	});
 	promise.then(function(dte){
-		const fs = require('fs');
-		fs.appendFile('/tmp/aim-hw.log',dte + ' => ' +  value + '\n', function (err) {
+		fs.appendFile( logfpath + '/' + logfname,dte + ' => ' +  value + '\n', function (err) {
 		  if (err){
 				return -1;
 			};
 			return true;
 		});
 	});
+}
+function load_initconfig(cb){
+	try{
+		var promise = new Promise(function(resolve,reject){
+			fs.readFile(filepath + '/' + filename, 'utf8', function(err, data) {
+				if (err) throw err;
+				var tmpdata = data.split('\n');
+				if(tmpdata.length>2){
+					var tmpv1;
+					var tmpv2;
+					var configData = [];
+					for(var i = 0;i<tmpdata.length;i++){
+						if(tmpdata[i].length>2){
+							tmpv1 = tmpdata[i].replace(/,/g,'');
+							tmpv2 = tmpv1.replace(/;/g,'');
+							tmpv1 = tmpv2.replace(/"/g,'');
+							tmpv2 = tmpv1.replace(/'/g,'');
+							tmpv1 = tmpv2.replace(/`/g,'');
+							tmpv2 = tmpv1.replace(/ /g,'');
+							configData.push(tmpv2);
+						}
+					}
+					resolve(configData);
+				}else{
+					resolve(-1);
+				}
+		  });
+		});
+		promise.then(function(valarry){
+			if(valarry==-1){
+				cb(-1);
+			}
+			var tmp = adminconfigParser(valarry);
+			cb(tmp);
+		});
+	}catch(e){
+		errlogging(e,'***Error: ');
+		cb(-1);
+	}
 }
 function get_sysID(greptoken, parseflg,cb){
 	const exec = require( 'child_process' ).exec;
@@ -343,9 +537,18 @@ function getrpiIPADDR(intobj){
 function expressSRV(){
 	appendlogs('Starting Web Service..');
 	var routes = require('./src/routes/index');
+	var themeLayout = 'layout';
+	var pubsource = 'public';
+	if(guivar.skin.get()==2){
+		themeLayout = 'l2';
+		pubsource = 'public2';
+	}else {
+		themeLayout = 'layout';
+		pubsource = 'public';
+	}
 	//Init app
 	app.set('views',path.join(__dirname,'./src/views'));
-	app.engine('handlebars',exphbs({defaultLayout:'../../src/views/layouts/layout'}));
+	app.engine('handlebars',exphbs({defaultLayout:'../../src/views/layouts/' + themeLayout}));
 	app.set('view engine','handlebars');
 	//bodyParser Middleware
 
@@ -353,7 +556,7 @@ function expressSRV(){
 	app.use(bodyParser.urlencoded({extended:false}));
 	app.use(cookieParser());
 	//Set Static Folder
-	app.use(express.static(path.join(__dirname,'public')));
+	app.use(express.static(path.join(__dirname,pubsource)));
 	//Express session
 	app.use(session({
 		secret: 'secret',
@@ -387,10 +590,15 @@ function expressSRV(){
 	 });
 	 app.use('/',routes.routes);
 	//
-	server.listen(HTTP_PORT);
-	var wmsg = 'Server started on port ' + HTTP_PORT;
- 	console.log(wmsg);
-	appendlogs(wmsg+'\n');
+	try {
+		server.listen(httpPORT);
+		var wmsg = 'Server started on port ' + httpPORT;
+	 	console.log(wmsg);
+		appendlogs(wmsg+'\n');
+	} catch (e) {
+		throw e;
+	}
+
 	/*
 	io.on('AIMSOCKET',function(client){
 		console.log('Client connected...');
@@ -452,7 +660,6 @@ function pipslabool3(ctr){
 }
 function gethwheartbeats(hwhbdelay,cb){
 	setTimeout(function(){
-//		console.log("+++++hwhb delay " + hwhbdelay);
 		checkipsla(function(retval){
 			if(retval>1){
 				if (!ispactvflg){
@@ -509,7 +716,7 @@ function blinkdisp1(msg,delay){
 		}
 	},delay);
 }
-function parsemkdata(cmd,val){
+function parseata(cmd,val){
 	var arrx = [];
 	if (cmd='/ping'){
 		for(i=0;i<4;i++){
@@ -519,12 +726,23 @@ function parsemkdata(cmd,val){
 					arrx.push(tmp[1]);
 				}
 			}catch(err){
+				errlogging(err,'***Error: ');
 			}
 		}
 	}else{
 		return val;
 	}
 	return arrx;
+}
+function errlogging(e,msg){
+	if(msg===undefined){
+		appendlogs('***Error Loading Libraries:\n');
+	}else {
+		appendlogs(msg + '\n');
+	}
+	appendlogs('*************************************>\n');
+	appendlogs(e + '\n');
+	appendlogs('*************************************\n');
 }
 /*
 raspi.init(() => {

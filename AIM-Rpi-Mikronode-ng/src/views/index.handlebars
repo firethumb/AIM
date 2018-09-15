@@ -117,6 +117,19 @@
             {{{setuptime obj.upTime}}}
         }
       });
+      socket.on('updates', function(obj){
+        console.log('test2 updates',obj);
+        if(obj.income){
+          {{{setuptime obj.upTime}}}
+        }
+        if(obj.upTime){
+            {{{setuptime obj.upTime}}}
+        },
+        if(obj.wlc){
+            {{{setwlcCPU obj.wlc.CPU}}}
+            {{{setwlcMEM obj.wlc.MEM}}}
+        }
+      });
     }
   })();
 </script>

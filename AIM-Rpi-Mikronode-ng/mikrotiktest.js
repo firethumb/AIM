@@ -1,67 +1,37 @@
-var ntpClient = require('ntp-client');
-var MikroNode = require('mikronode-ng');
-var randomstring = require('randomstring');
-
-const RPI_IPADDR = '131.101.179.4';
-const RPI_USERNAME = 'admin';
-const RPI_PASSWORD = '';
-
-//var strRandom = randomstring.generate(4);
-
-//GenUser(strRandom);
-
-getNTPTIME(function(cbval){
-	console.log('cbval : ', cbval);
-});
-function getNTPTIME(cb){
-	ntpClient.getNetworkTime("131.101.24.236", 123, function(err, date) {
-	    if(err) {
-	        console.error(err);
+var sys = require('util')
+var exec = require('child_process').exec;
+function puts(error, stdout, stderr) {
+	if (error) throw error;
+	if (stderr) throw stderr;
+	console.log('stdout',stdout);
+	//var retval = stdout.slice(stdout.indexOf("received,")+10,stdout.indexOf("packet "));
+	//cb(retval);
+	var arry = stdout.split('\n');
+	for(var i=0;i<arry.length;i++){
+		var tmparr1='  ';
+		var tmparr2=arry[i];
+		var flg=false;
+		if(tmparr2.indexOf('UG')!=-1){
+			for(var j=0;j<100;j++){
+				if(tmparr1.indexOf('  ')!=-1){
+					tmparr1=tmparr2.replace(/  /g,' ');
 				}
-	    console.log("Current time : ");
-	    console.log(date); // Mon Jul 08 2013 21:31:31 GMT+0200 (Paris, Madrid (heure d’été))
-			cb(date);
-	});
-}
-console.log ("test");
-/*
-mktkcmd('/ping','4.2.2.2',function(cbval){
-	console.log("cbval " + cbval);
-});
-*/
-function mktkcmd(cmd,params,cb){
-	var connection = MikroNode.getConnection(RPI_IPADDR, RPI_USERNAME,RPI_PASSWORD);
-    connection.closeOnDone = true;
-    connection.connect(function(conn) {
-        try
-        {
-			var chan = conn.openChannel();
-			chan.closeOnDone = true;
-			if(params){
-				console.log('here');
-				chan.write(['/ping','=address=4.2.2.2','=count=4'],function(c) {
-							c.on('trap', function(data) {
-								console.log('output',data);
-								cb(['trap',data]);
-							});
-							c.on('done', function(data) {
-								console.log('output',data);
-								cb('done',data);
-							});
-						});
-			}else{
-				chan.write(['/ip/hotspot/user/add', '=name=' + 'asfad'], function(c) {
-					c.on('trap', function(data) {
-						cb(['trap',data]);
-					});
-					c.on('done', function(data) {
-						cb('done',data);
-					});
-				});
+				else{
+					flg=true;
+					break;
+				}
+				tmparr2=tmparr1;
 			}
-
-		}catch(e){
-			cb(['err',e]);
+			if(flg){
+				var rst=tmparr1.split(' ');
+				console.log('rst ',rst);
+				break;
+			}
 		}
-    });
+	}
+}
+try {
+	exec('route -n', puts);
+} catch (e) {
+	cb(-1);
 }
