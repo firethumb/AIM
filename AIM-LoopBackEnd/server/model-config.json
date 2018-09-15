@@ -41,5 +41,9 @@
   "Devices": {
     "dataSource": "aim-app",
     "public": true
+  },
+  "license": {
+    "dataSource": "aim-app",
+    "public": true
   }
 }
