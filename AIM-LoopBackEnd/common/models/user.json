@@ -1,5 +1,5 @@
 {
-  "name": "UserApp",
+  "name": "Users",
   "base": "User",
   "idInjection": true,
   "options": {
