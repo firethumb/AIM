@@ -35,8 +35,9 @@
     "dataSource": "aim-app",
     "public": false
   },
-  "Message": {
-    "dataSource": null
+  "UserApp": {
+    "dataSource": "aim-app",
+    "public": true
   },
   "Devices": {
     "dataSource": "aim-app",
