@@ -13,9 +13,6 @@
       "./mixins"
     ]
   },
-  "User": {
-    "dataSource": "aim-app"
-  },
   "AccessToken": {
     "dataSource": "aim-app",
     "public": false
