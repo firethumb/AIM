@@ -1,6 +1,6 @@
 {
   "name": "Users",
-  "base": "User",
+  "base": "Users",
   "idInjection": true,
   "options": {
     "validateUpsert": true
