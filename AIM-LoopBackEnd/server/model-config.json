@@ -32,9 +32,13 @@
     "dataSource": "aim-app",
     "public": false
   },
-  "Users": {
+  "UsersDB": {
     "dataSource": "aim-app",
-    "public": true
+    "public": true,
+    "options": {
+    "realmRequired": false,
+    "realmDelimiter": ":"
+    }
   },
   "Devices": {
     "dataSource": "aim-app",
