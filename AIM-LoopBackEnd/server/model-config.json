@@ -48,6 +48,10 @@
     "dataSource": "aim-app",
     "public": true
   },
+  "User": {
+    "dataSource": "aim-app",
+    "public": true
+  },
   "ClientDB": {
     "dataSource": "aim-app",
     "public": true,
