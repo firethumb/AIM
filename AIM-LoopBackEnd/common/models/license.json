@@ -1,5 +1,5 @@
 {
-  "name": "license",
+  "name": "License",
   "plural": "licenses",
   "base": "PersistedModel",
   "idInjection": true,
