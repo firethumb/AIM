@@ -34,7 +34,7 @@
   },
   "UsersDB": {
     "dataSource": "aim-app",
-    "public": true,
+    "public": false,
     "options": {
       "realmRequired": false,
       "realmDelimiter": ":"
@@ -50,6 +50,10 @@
   },
   "ClientDB": {
     "dataSource": "aim-app",
-    "public": true
+    "public": true,
+    "options": {
+      "realmRequired": false,
+      "realmDelimiter": ":"
+    }
   }
 }
