@@ -6,17 +6,6 @@
     "validateUpsert": true
   },
   "properties": {
-    "Username": {
-      "type": "String",
-      "required": "true",
-      "length": "50",
-      "mysql": {
-        "columnName": "Username",
-        "dataType": "VARCHAR",
-        "dataLength": 50,
-        "nullable": "N"
-      }
-    },
     "UId": {
       "type": "String",
       "required": "true",
@@ -28,31 +17,9 @@
         "nullable": "N"
       }
     },
-    "Password": {
-      "type": "String",
-      "required": "true",
-      "length": "45",
-      "mysql": {
-        "columnName": "Password",
-        "dataType": "VARCHAR",
-        "dataLength": 45,
-        "nullable": "N"
-      }
-    },
-    "EmailAdd": {
-      "type": "String",
-      "required": "true",
-      "length": "45",
-      "mysql": {
-        "columnName": "EmailAdd",
-        "dataType": "VARCHAR",
-        "dataLength": 45,
-        "nullable": "N"
-      }
-    },
     "CreatedTime": {
       "type": "DATE",
-      "required": "true",
+      "required": "false",
       "length": "26",
       "mysql": {
         "columnName": "CreatedTime",
