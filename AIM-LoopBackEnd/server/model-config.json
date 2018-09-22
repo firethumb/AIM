@@ -36,8 +36,8 @@
     "dataSource": "aim-app",
     "public": true,
     "options": {
-    "realmRequired": false,
-    "realmDelimiter": ":"
+      "realmRequired": false,
+      "realmDelimiter": ":"
     }
   },
   "Devices": {
@@ -45,6 +45,10 @@
     "public": true
   },
   "license": {
+    "dataSource": "aim-app",
+    "public": true
+  },
+  "ClientDB": {
     "dataSource": "aim-app",
     "public": true
   }

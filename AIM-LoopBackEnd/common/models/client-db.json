@@ -1,0 +1,40 @@
+{
+  "name": "ClientDB",
+  "plural": "ClientDBs",
+  "base": "User",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "username": {
+      "type": "string",
+      "required": true,
+      "default": "50"
+    },
+    "password": {
+      "type": "string",
+      "required": true,
+      "default": "50"
+    },
+    "email": {
+      "type": "string",
+      "required": true,
+      "default": "45"
+    },
+    "createdTime": {
+      "type": "date",
+      "required": true,
+      "default": "1970-01-01T00:00:00.026Z"
+    },
+    "lastModified": {
+      "type": "date",
+      "required": true,
+      "default": "1970-01-01T00:00:00.026Z"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
