@@ -7,12 +7,12 @@
     "validateUpsert": true
   },
   "properties": {
-    "DeviceUId": {
+    "DeviceId": {
       "type": "String",
       "required": "true",
       "length": "50",
       "mysql": {
-        "columnName": "DeviceUId",
+        "columnName": "DeviceId",
         "dataType": "VARCHAR",
         "dataLength": 50,
         "nullable": "N"

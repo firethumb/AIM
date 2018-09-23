@@ -7,6 +7,8 @@
     "validateUpsert": true
   },
   "properties": {
+    "realm": false,
+    "emailVerified": false,
     "username": {
       "type": "string",
       "required": true,
