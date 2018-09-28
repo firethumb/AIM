@@ -8,10 +8,6 @@
   },
   "properties": {
     "realm": false,
-<<<<<<< HEAD
-    "emailVerified": false,
-=======
->>>>>>> 8fba071929fb1a4318ad8cfb664015fcda497b41
     "username": {
       "type": "string",
       "required": true,
