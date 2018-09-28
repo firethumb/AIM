@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function(Clientdb) {
-    delete app.models.people.validations.email;
+    delete Clientdb.models.people.validations.email;
 
 
 };
