@@ -10,7 +10,9 @@ AIM-Cloud-React/node_modules/**
 AIM-FrontEnd/node_modules/**
 AIM-FrontEnd/
 AIM-FrontEnd/**
-
+AIM-Rpi-Mikronode-ng/
+AIM-Rpi-Mikronode-ng/**
+AIM-Rpi-Mikronode-ng
 dist
 test
 .vscode
