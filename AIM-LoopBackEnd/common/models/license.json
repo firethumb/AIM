@@ -1,0 +1,125 @@
+{
+  "name": "License",
+  "plural": "licenses",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "DeviceId": {
+      "type": "String",
+      "required": "true",
+      "length": "50",
+      "mysql": {
+        "columnName": "DeviceId",
+        "dataType": "VARCHAR",
+        "dataLength": 50,
+        "nullable": "N"
+      }
+    },
+    "Id": {
+      "type": "String",
+      "required": "true",
+      "length": "50",
+      "mysql": {
+        "columnName": "Id",
+        "dataType": "VARCHAR",
+        "dataLength": 50,
+        "nullable": "N"
+      }
+    },
+    "SerialNumber": {
+      "type": "String",
+      "required": "true",
+      "length": "45",
+      "mysql": {
+        "columnName": "SerialNumber",
+        "dataType": "VARCHAR",
+        "dataLength": 45,
+        "nullable": "N"
+      }
+    },
+    "LicenseKey": {
+      "type": "String",
+      "required": "true",
+      "length": "45",
+      "mysql": {
+        "columnName": "LicenseKey",
+        "dataType": "VARCHAR",
+        "dataLength": 45,
+        "nullable": "N"
+      }
+    },
+    "LicenseType": {
+      "type": "Number",
+      "required": "true",
+      "length": "20",
+      "mysql": {
+        "columnName": "LicenseType",
+        "dataType": "INT",
+        "dataLength": 20,
+        "nullable": "N"
+      }
+    },
+    "ContractId": {
+      "type": "String",
+      "required": "true",
+      "length": "30",
+      "mysql": {
+        "columnName": "ContractId",
+        "dataType": "VARCHAR",
+        "dataLength": 30,
+        "nullable": "N"
+      }
+    },
+    "LoginDateTime": {
+      "type": "DATE",
+      "required": "true",
+      "length": "26",
+      "mysql": {
+        "columnName": "LoginDateTime",
+        "dataType": "DATETIME",
+        "dataLength": 26,
+        "nullable": "N"
+      }
+    },
+    "LogoutDateTime": {
+      "type": "DATE",
+      "required": "true",
+      "length": "26",
+      "mysql": {
+        "columnName": "LogoutDateTime",
+        "dataType": "DATETIME",
+        "dataLength": 26,
+        "nullable": "N"
+      }
+    },
+    "ExpiryDateTime": {
+      "type": "DATE",
+      "required": "true",
+      "length": "26",
+      "mysql": {
+        "columnName": "ExpiryDateTime",
+        "dataType": "DATETIME",
+        "dataLength": 26,
+        "nullable": "N"
+      }
+    },
+    "PurchasedDateTime": {
+      "type": "DATE",
+      "required": "true",
+      "length": "26",
+      "mysql": {
+        "columnName": "PurchasedDateTime",
+        "dataType": "DATETIME",
+        "dataLength": 26,
+        "nullable": "N"
+      }
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

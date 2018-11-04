@@ -13,9 +13,6 @@
       "./mixins"
     ]
   },
-  "User": {
-    "dataSource": "aim-app"
-  },
   "AccessToken": {
     "dataSource": "aim-app",
     "public": false
@@ -35,11 +32,32 @@
     "dataSource": "aim-app",
     "public": false
   },
-  "Message": {
-    "dataSource": null
+  "UsersDB": {
+    "dataSource": "aim-app",
+    "public": false,
+    "options": {
+      "realmRequired": false,
+      "realmDelimiter": ":"
+    }
   },
   "Devices": {
     "dataSource": "aim-app",
     "public": true
+  },
+  "License": {
+    "dataSource": "aim-app",
+    "public": true
+  },
+  "User": {
+    "dataSource": "aim-app",
+    "public": true
+  },
+  "ClientDB": {
+    "dataSource": "aim-app",
+    "public": true,
+    "options": {
+      "realmRequired": false,
+      "realmDelimiter": ":"
+    }
   }
 }
