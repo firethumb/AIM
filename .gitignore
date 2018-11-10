@@ -1,15 +1,3 @@
-AIM-Rpi-Mikronode/node_modules/
-AIM-Rpi-Mikronode/node_modules/**
-AIM-Rpi-Mikronode/dist/
-AIM-Rpi-Mikronode/dist/**
-AIM-Rpi-Mikronode/examples/
-AIM-Rpi-Mikronode/examples/**
-AIM-Rpi-Mikronode/node_modules
-AIM-Cloud-React/node_modules/
-AIM-Cloud-React/node_modules/**
-AIM-FrontEnd/node_modules/**
-AIM-FrontEnd/
-AIM-FrontEnd/**
 AIM-Rpi-Mikronode-ng/
 AIM-Rpi-Mikronode-ng/**
 AIM-Rpi-Mikronode-ng
