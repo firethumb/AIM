@@ -7,6 +7,7 @@ import { ServermaintenanceComponent } from './servermaintenance/servermaintenanc
 
 const routes: Routes = [
     { path: '', loadChildren: './defroute/defroute.module#DefrouteModule' },
+    { path: 'portal', loadChildren: './menu/menu.module#MenuModule' },
     { path:'login',component: LoginComponent},
     { path:'signup',component: SignupComponent},
     { path:'error',component: ServermaintenanceComponent},
