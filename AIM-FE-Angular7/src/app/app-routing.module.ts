@@ -6,7 +6,8 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import { ServermaintenanceComponent } from './servermaintenance/servermaintenance.component';
 
 const routes: Routes = [
-    { path: '', loadChildren: './defroute/defroute.module#DefrouteModule' },
+    { path: '', redirectTo: 'default', pathMatch: 'full' },
+    { path: 'default', loadChildren: './defroute/defroute.module#DefrouteModule' },
     { path: 'portal', loadChildren: './menu/menu.module#MenuModule' },
     { path:'login',component: LoginComponent},
     { path:'signup',component: SignupComponent},

@@ -12,7 +12,8 @@ const routes: Routes = [
         { path:'log',component: LogComponent},
         { path:'device',component: DeviceComponent},
         { path:'dashboard',component: DashboardComponent}
-    ]}
+    ]},
+
 ];
 
 @NgModule({
