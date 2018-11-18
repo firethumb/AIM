@@ -24,7 +24,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/app/menu/shared/_styles.scss"
+              "src/app/shared/_styles.scss"
             ],
             "scripts": []
           },
