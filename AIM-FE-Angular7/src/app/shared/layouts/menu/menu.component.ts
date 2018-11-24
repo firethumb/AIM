@@ -10,11 +10,9 @@ import { GlobalService } from '../../services/global.service';
 })
 export class MenuComponent {
   @Input() menuInfo: any;
-  constructor() { }
 
-//  constructor(private _globalService: GlobalService) { }
+  constructor(private _globalService: GlobalService) { }
 
-/*
   private isToggleOn(item) {
     item.toggle === 'on' ? item.toggle = 'off' : item.toggle = 'on';
   }
@@ -23,5 +21,4 @@ export class MenuComponent {
     //this._globalService._isActived(item);
     this._globalService.dataBusChanged('isActived', item);
   }
-  */
 }

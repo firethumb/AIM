@@ -23,6 +23,8 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/normalize.css/normalize.css",
+              "./node_modules/font-awesome/scss/font-awesome.scss",
               "src/styles.scss",
               "src/app/shared/_styles.scss"
             ],
@@ -73,7 +75,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": [],
             "assets": [

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-//import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 /* models */
 /* import { TabMenuModel } from '../models/tabs-model';
 import { NotificationModel } from '../models/notification-model'; */
@@ -33,7 +33,7 @@ export class GlobalService {
     isActived$ = this.isActivedSource.asObservable();
     _isActived(isActived) {
         this.isActivedSource.next(isActived);
-    }
+    }*/
 
     private dataSource = new Subject<DataSourceClass>();
 
@@ -45,7 +45,6 @@ export class GlobalService {
             value: value
         })
     }
-    */
 }
 
 

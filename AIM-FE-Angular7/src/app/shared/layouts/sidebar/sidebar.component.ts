@@ -31,7 +31,6 @@ export class SidebarComponent implements OnInit {
     }, error => {
       console.log('Error: ' + error);
     }); */
-    /*
     this._globalService.data$.subscribe(data => {
       if (data.ev === 'sidebarToggle') {
         this.sidebarToggle = data.value;
@@ -39,7 +38,7 @@ export class SidebarComponent implements OnInit {
     }, error => {
       console.log('Error: ' + error);
     });
-*/
+
   }
 
   /* 初始化 判断当前路由状态信息 首次加载菜单状态 */
