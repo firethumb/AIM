@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MENU_ITEM } from '../../pages/menu';
+import { MENU_ITEM } from '../../menu/sidebar-menu';
 import { Router } from '@angular/router';
 import { GlobalService } from './global.service';
 
@@ -62,7 +62,7 @@ export class menuService {
       } else {
         this.path_item = [index.path];
         index.routerLink = this.creatRouterLink(index.path);
-        index.routerLink.unshift('/', 'pages');
+        index.routerLink.unshift('/', 'portal');
       }
     })
   }

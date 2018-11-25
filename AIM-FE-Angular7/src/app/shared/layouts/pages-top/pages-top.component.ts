@@ -23,7 +23,6 @@ export class PagesTopComponent {
     }, error => {
       console.log('Error: ' + error);
     }); */
-/*
     this._globalService.data$.subscribe(data => {
       if (data.ev === 'sidebarToggle') {
         this.sidebarToggle = data.value;
@@ -31,8 +30,8 @@ export class PagesTopComponent {
     }, error => {
       console.log('Error: ' + error);
     });
-    */
-  //  this._globalService.dataBusChanged('sidebarToggle', !this.sidebarToggle);
+
+    this._globalService.dataBusChanged('sidebarToggle', !this.sidebarToggle);
 
 
     //this._globalService._sidebarToggleState(!this.sidebarToggle);
