@@ -3,7 +3,7 @@ import { collapse } from '../../animation/collapse-animate';
 import { GlobalService } from '../../services/global.service';
 
 @Component({
-  selector: 'du-menu',
+  selector: 'sb-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],
   animations: [collapse]

@@ -32,3 +32,12 @@
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
+.sb-common{
+  background: $sidebar-bg;
+  .custfontcolor1{
+    color: orange;
+  }
+  .custfontcolor2{
+    color: lightgreen;
+  }
+}
