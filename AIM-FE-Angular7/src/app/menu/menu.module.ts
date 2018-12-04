@@ -7,7 +7,7 @@ import { LogComponent } from './log/log.component';
 import { DeviceComponent } from './device/device.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
-//import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '../shared/shared.module';
 import { LayoutModule } from '../shared/layout.module';
 
 @NgModule({
@@ -15,7 +15,7 @@ import { LayoutModule } from '../shared/layout.module';
     CommonModule,
     MenuRoutingModule,
     LayoutModule,
-//    SharedModule,
+    SharedModule,
   ],
   declarations: [
     MenuComponent,

@@ -1,14 +1,62 @@
-<h1 class="h2">Settings..........................</h1>
-  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Settings</h1>
-    <div class="btn-toolbar mb-2 mb-md-0">
-      <div class="btn-group mr-2">
-        <button class="btn btn-sm btn-outline-secondary">Share</button>
-        <button class="btn btn-sm btn-outline-secondary">Export</button>
+<div class="row">
+  <div class="col-md-6">
+    <card cardTitle="Basic System Settings" isCollapse="true">
+      <div class="form-group">
+        <label class="control-label">Text</label>
+        <input type="text" class="form-control" placeholder="Text Input">
+        <label class="control-label">Password</label>
+        <input type="password" class="form-control" placeholder="Password Input">
+        <label class="control-label">With Help</label>
+        <input type="text" class="form-control" placeholder="With Help">
+        <span class="help-block sub-little-text">A block of help text that breaks onto a new line and may extend beyond one line.</span>
+        <label class="control-label">Small Input</label>
+        <input type="text" class="form-control form-control-sm" placeholder="Small Input">
+        <label class="control-label">Large Input</label>
+        <input type="text" class="form-control form-control-lg" placeholder="Large Input">
+        <label class="control-label">Disabled</label>
+        <input type="text" class="form-control" placeholder="Disabled Input" disabled>
+        <label class="control-label">Readonly</label>
+        <input type="text" class="form-control" placeholder="Readonly Input" readonly>
+        <label class="control-label">Textarea</label>
+        <textarea cols="0" rows="10" class="form-control" placeholder="Textarea"></textarea>
       </div>
-      <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-        This week
-      </button>
-    </div>
+    </card>
   </div>
+  <div class="col-md-6">
+    <card cardTitle="Basic Features">
+      <div class="form-group">
+        <div class="col-md-12">
+          <input class="checkbox" type="checkbox" id="color-checkbox1" checked>
+          <label class="check-label" for="color-checkbox1">Allow 4.2.2.2</label>
+        </div>
+        <div class="col-md-12">
+          <input class="checkbox checkbox-primary" type="checkbox" id="color-checkbox2" checked>
+          <label class="check-label" for="color-checkbox2">Allow 8.8.8.8</label>
+        </div>
+        <div class="col-md-12">
+          <input class="checkbox checkbox-success" type="checkbox" id="color-checkbox3" checked>
+          <label class="check-label" for="color-checkbox3">Allow 208.67.222.222</label>
+        </div>
+        <div class="col-md-12">
+          <input class="checkbox checkbox-warning" type="checkbox" id="color-checkbox4" checked>
+          <label class="check-label" for="color-checkbox4">Allow Hotspot DHCP</label>
+        </div>
+        <div class="col-md-12">
+          <input class="checkbox checkbox-danger" type="checkbox" id="color-checkbox5" checked>
+          <label class="check-label" for="color-checkbox5">Allow Hotspot DNS</label>
+        </div>
+        <div class="col-md-12">
+          <input class="checkbox checkbox-info" type="checkbox" id="color-checkbox6" checked>
+          <label class="check-label" for="color-checkbox6">Coinslot Activation with Internet</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="input-group">
+          <input class="form-control with-success-addon" placeholder="Mail" type="text">
+          <span class="input-group-addon input-group-addon-success addon-right" id="basic-addon1">@mail.com</span>
+        </div>
+      </div>
+    </card>
+
+  </div>
+</div>

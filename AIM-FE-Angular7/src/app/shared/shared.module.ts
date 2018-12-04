@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 //import { NgxPaginationModule } from 'ngx-pagination';
+import { CardComponent } from './components/card/card.component';
 import { JsonpModule } from '@angular/http';
 
 /* components
@@ -26,6 +27,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     JsonpModule,
   ],
   declarations: [
+    CardComponent
     /*
     CardComponent,
     FileTreeComponent,
@@ -41,6 +43,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     */
   ],
   exports: [
+    CardComponent
     /*
     CardComponent,
     FileTreeComponent,
