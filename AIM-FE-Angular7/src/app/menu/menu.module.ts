@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuRoutingModule } from './menu-routing.module';
-
 import { MenuComponent } from './menu.component';
 import { LogComponent } from './log/log.component';
 import { DeviceComponent } from './device/device.component';
@@ -15,7 +14,7 @@ import { LayoutModule } from '../shared/layout.module';
     CommonModule,
     MenuRoutingModule,
     LayoutModule,
-    SharedModule,
+    SharedModule
   ],
   declarations: [
     MenuComponent,
