@@ -1,5 +1,5 @@
 @import "../../theme/conf";
-$config-width:230px;
+$config-width:200px;
 .right-config-wrap {
     display: flex;
     flex-direction: column;
@@ -34,7 +34,7 @@ $config-width:230px;
 }
 
 .config-header {
-    padding: 5px 10px;
+    padding: 3px 6px;
     width: $config-width;
     height: auto;
     color: $sidebar-fonts-color;
@@ -54,7 +54,6 @@ $config-width:230px;
 }
 
 .config-content {
-    flex: 1;
     width: $config-width;
     color: $sidebar-fonts-color;
     .config-list {
@@ -62,10 +61,18 @@ $config-width:230px;
         justify-content: space-between;
         width: 100%;
         height: auto;
-        padding: 20px 10px 10px 10px;
+        padding: 4px 2px 2px 2px;
         border-bottom: 1px solid $border-color;
         &:first-child {
             border-top: 1px solid $border-color;
         }
     }
+}
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: .5rem;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }

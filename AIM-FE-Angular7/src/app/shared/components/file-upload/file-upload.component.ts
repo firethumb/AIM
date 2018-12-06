@@ -15,14 +15,5 @@ export class FileUploadComponent implements OnInit {
   ngOnInit() { }
 
   public uploader: FileUploader = new FileUploader({ url: URL });
-  public hasBaseDropZoneOver: boolean = false;
-  public hasAnotherDropZoneOver: boolean = false;
 
-  public fileOverBase(e: any): void {
-    this.hasBaseDropZoneOver = e;
-  }
-
-  public fileOverAnother(e: any): void {
-    this.hasAnotherDropZoneOver = e;
-  }
 }

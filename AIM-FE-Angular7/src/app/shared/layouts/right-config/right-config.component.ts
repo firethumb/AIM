@@ -12,11 +12,11 @@ export class RightConfigComponent implements OnInit {
   constructor(private _globalService: GlobalService) { }
 
   ngOnInit() { }
-/*
+
   configToggle() {
     this.isConfigToggle = !this.isConfigToggle;
     //this._globalService._sidebarToggleState(!this.isConfigToggle);
     this._globalService.dataBusChanged('sidebarToggle', !this.isConfigToggle);
   }
-  */
+  
 }

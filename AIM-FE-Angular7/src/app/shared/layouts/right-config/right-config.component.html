@@ -8,20 +8,32 @@
       <i class="fa fa-cogs"></i>
       <span>Settings</span>
     </h3>
-    <p class="desc">Settings desc Settings desc Settings desc Settings desc.</p>
+    <p class="desc">Other page settings</p>
   </div>
   <ul class="config-content">
     <li class="config-list">
-      <span>Config1</span>
+      <span>Stay login</span>
       <switch switchName="config1" switchId="config1" multiple [checked]="true"></switch>
     </li>
     <li class="config-list">
-      <span>Config2</span>
+      <span>Turn off notification</span>
       <switch switchName="config2" switchId="config2" multiple></switch>
     </li>
-    <li class="config-list">
-      <span>Config3</span>
-      <switch switchName="config3" switchId="config3" multiple></switch>
-    </li>
   </ul>
+  <div class="sidebar-sticky">
+    <div class="config-header">
+      <h3 class="config-title">
+        <span>Register device  </span>
+        <a href="https://getbootstrap.com/docs/4.1/examples/dashboard/#">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+        </a>
+        <!--<i class="fa fa-cogs"></i>-->
+
+      </h3>
+      <p class="desc">Add device here</p>
+    </div>
+    <sb-devices></sb-devices>
+  </div>
+
+
 </div>

@@ -4,7 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 //import { NgxPaginationModule } from 'ngx-pagination';
 import { CardComponent } from './components/card/card.component';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
-import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { SwitchComponent } from './components/switch/switch.component';
+
 import { JsonpModule } from '@angular/http';
 
 /* components
@@ -14,11 +15,11 @@ import { TabsetComponent } from './components/tabset/tabset.component';
 import { TabContentComponent } from './components/tabset/tab-content/tab-content.component';
 
 import { FileTreeComponent } from './components/file-tree/file-tree.component';
-import { SwitchComponent } from './components/switch/switch.component';
+
 import { PellEditorComponent } from './components/pell-editor/pell-editor.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { WeatherComponent } from './components/weather/weather.component';
-import { ProfileComponent } from './components/profile/profile.component';
+import { ProfileCosmponent } from './components/profile/profile.component';
 */
 @NgModule({
   imports: [
@@ -30,8 +31,9 @@ import { ProfileComponent } from './components/profile/profile.component';
   ],
   declarations: [
     CardComponent,
-    FileUploadComponent,
-    ProgressBarComponent
+//    FileUploadComponent,
+    ProgressBarComponent,
+    SwitchComponent
     /*
     CardComponent,
     FileTreeComponent,
@@ -48,8 +50,9 @@ import { ProfileComponent } from './components/profile/profile.component';
   ],
   exports: [
     CardComponent,
-    FileUploadComponent,
-    ProgressBarComponent
+//    FileUploadComponent,
+    ProgressBarComponent,
+    SwitchComponent
     /*
     CardComponent,
     FileTreeComponent,

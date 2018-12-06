@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-//import { SharedModule } from './shared.module';
+import { SharedModule } from './shared.module';
 
 import { GlobalService } from './services/global.service';
 
@@ -17,8 +17,8 @@ import { SbdevicesComponent } from './layouts/sb-devices/sb-devices.component';
 @NgModule({
     imports: [
         CommonModule,
-        RouterModule
-//        SharedModule
+        RouterModule,
+        SharedModule
     ],
     providers: [
         GlobalService
@@ -29,17 +29,17 @@ import { SbdevicesComponent } from './layouts/sb-devices/sb-devices.component';
         PagesTopComponent,
 //        ContentTopComponent,
 //        NotificationComponent,
-//        RightConfigComponent,
+        RightConfigComponent,
 //        LoadingComponent,
         SbdevicesComponent
     ],
     exports: [
         SidebarComponent,
         PagesTopComponent,
-        SbdevicesComponent
+        SbdevicesComponent,
 //        ContentTopComponent,
 //        NotificationComponent,
-//        RightConfigComponent,
+        RightConfigComponent
 //        LoadingComponent
     ]
 })

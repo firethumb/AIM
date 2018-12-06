@@ -1,4 +1,4 @@
-<div class="row">
+ <div class="row">
   <div class="col-md-6">
     <card cardTitle="Basic System Settings" isCollapse="true">
       <div class="form-group">
@@ -12,13 +12,24 @@
         <input type="text" class="form-control form-control-sm" placeholder="Enter IP ADDRESS">
         <label class="control-label">Device Clock DATE</label>
         <input type="text" class="form-control form-control-sm" placeholder="Enter IP ADDRESS">
-        <label class="control-label">Disabled</label>
-        <textarea cols="0" rows="10" class="form-control" placeholder="Textarea"></textarea>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-6">
+              <label class="control-label">system.ini Value</label>
+              <textarea cols="0" rows="10" class="form-control" placeholder="Textarea"></textarea>
+            </div>
+            <div class="col-6">
+              <label class="control-label">startup.cfg Value</label>
+              <textarea cols="0" rows="10" class="form-control" placeholder="Textarea"></textarea>
+            </div>
+          </div>
+        </div>
+
       </div>
     </card>
   </div>
   <div class="col-md-6">
-    <card cardTitle="Basic Features">
+    <card cardTitle="Basic Features" isCollapse="true">
       <div class="form-group">
         <div class="col-md-12">
           <input class="checkbox" type="checkbox" id="color-checkbox1" checked>
@@ -52,6 +63,11 @@
         </div>
       </div>
     </card>
-     <app-file-upload></app-file-upload>
+
   </div>
 </div>
+<card cardTitle="WLC File System Upload" isCollapse="true">
+  <div class="row">
+    <app-file-upload></app-file-upload>
+  </div>
+</card>
