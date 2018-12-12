@@ -4,50 +4,65 @@
       <div class="form-group">
         <div class="row">
           <div class="col-6">
+            <div class="form-group">
               <label for="example1" class="form-label">WEB UI PORT:</label>
-              <input type="text" class="form-control" id="QueryDelay" placeholder="8080">
-              <label for="example2" class="form-label">Local Web Password:</label>
-              <input type="text" class="form-control" id="webun" placeholder="Input Password">
-
+              <input type="number" class="form-control" id="webPORT" placeholder="8080">
+            </div>
+            <div class="form-group">
+              <label for="example3" class="form-label">Voucher OPT:</label>
+              <input type="number" class="form-control" id="voucheropt" placeholder="[1-3]" min="1" max="3">
+            </div>
+            <div class="form-group">
+              <label for="example2" class="form-label">WLC Username:</label>
+              <input type="text" class="form-control" id="wlcUsername" placeholder="Input Password">
+            </div>
+            <div class="form-group">
+              <label for="example2" class="form-label">WLC Password:</label>
+              <input type="password" class="form-control" id="wlcPasswd" placeholder="Input Password">
+            </div>
           </div>
           <div class="col-6">
-            <label for="example2" class="form-label">LED Brightness:</label>
-            <input type="number" class="form-control" id="ipaddr2" placeholder="[1-15]">
-            <label for="example2" class="form-label">Local Voucher Password</label>
-            <input type="password" class="form-control" id="ipaddr3" placeholder="Input Password">
+            <div class="form-group">
+              <label for="example2" class="form-label">LED Brightness:</label>
+              <input type="number" class="form-control" id="ledDispB" placeholder="[2-12]" min="2" max="12">
+            </div>
+            <div class="form-group">
+              <label for="example2" class="form-label">Local Voucher Password:</label>
+              <input type="password" class="form-control" id="vlpwd" placeholder="Input Password">
+            </div>
+            <div class="form-group">
+              <label for="example2" class="form-label">Local Web Password:</label>
+              <input type="password" class="form-control" id="webun" placeholder="Input Password">
+            </div>
           </div>
-
+          <div class="col-12">
+            <div class="form-group">
+              <label class="control-label">startup.cfg Value</label>
+              <textarea cols="0" rows="10" class="form-control" placeholder="Textarea"></textarea>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="form-group">
-            <label class="control-label">startup.cfg Value</label>
-            <textarea cols="0" rows="10" class="form-control" placeholder="Textarea"></textarea>
-          </div>
-        </div>
-      </div>
-
     </card>
     <card cardTitle="HeartBeat Parameters" isCollapse="true">
         <div class="row">
           <div class="col-6">
             <div class="form-group">
-              <label for="example1" class="form-label">Query Delay</label>
-              <input type="text" class="form-control" id="QueryDelay" placeholder="[20000 - 300000]">
+              <label for="example1" class="form-label">Query Delay:</label>
+              <input type="number" class="form-control" id="QueryDelay" placeholder="[30000 - 150000]" min="30000" max="150000" step="1000">
             </div>
             <div class="form-group">
-              <label for="example2" class="form-label">Test IP ADDR1</label>
+              <label for="example2" class="form-label">Test IP ADDR1:</label>
               <input type="text" class="form-control" id="ipaddr1" placeholder="Input IP Address">
             </div>
           </div>
           <div class="col-6">
           <div class="form-group">
-            <label for="example2" class="form-label">Test IP ADDR2</label>
+            <label for="example2" class="form-label">Test IP ADDR2:</label>
             <input type="text" class="form-control" id="ipaddr2" placeholder="Input IP Address">
           </div>
           <div class="form-group">
-            <label for="example2" class="form-label">Test IP ADDR3</label>
+            <label for="example2" class="form-label">Test IP ADDR3:</label>
             <input type="email" class="form-control" id="ipaddr3" placeholder="Input IP Address">
           </div>
           </div>
@@ -57,29 +72,23 @@
   <div class="col-md-6">
     <card cardTitle="Basic Features" isCollapse="true">
       <div class="form-group">
-        <div class="col-md-12">
+        <div class="row">
+        <div class="col-md-6">
           <input class="checkbox" type="checkbox" id="color-checkbox1" checked>
           <label class="check-label" for="color-checkbox1">Allow Log Auth</label>
-        </div>
-        <div class="col-md-12">
           <input class="checkbox checkbox-primary" type="checkbox" id="color-checkbox2" checked>
-          <label class="check-label" for="color-checkbox2">Allow 8.8.8.8</label>
-        </div>
-        <div class="col-md-12">
+          <label class="check-label" for="color-checkbox2">Minimize Ads</label>
           <input class="checkbox checkbox-success" type="checkbox" id="color-checkbox3" checked>
-          <label class="check-label" for="color-checkbox3">Allow 208.67.222.222</label>
+          <label class="check-label" for="color-checkbox3">Allow Hotspot Logout</label>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-6">
           <input class="checkbox checkbox-warning" type="checkbox" id="color-checkbox4" checked>
           <label class="check-label" for="color-checkbox4">Allow Hotspot DHCP</label>
-        </div>
-        <div class="col-md-12">
           <input class="checkbox checkbox-danger" type="checkbox" id="color-checkbox5" checked>
           <label class="check-label" for="color-checkbox5">Allow Hotspot DNS</label>
-        </div>
-        <div class="col-md-12">
           <input class="checkbox checkbox-info" type="checkbox" id="color-checkbox6" checked>
           <label class="check-label" for="color-checkbox6">Coinslot Activation with Internet</label>
+        </div>
         </div>
       </div>
       <div class="form-group">
@@ -94,30 +103,51 @@
         <div class="row">
           <div class="col-6">
             <div class="form-group">
-              <label for="example1" class="form-label">HOTSPOT Max Throughput:</label>
-              <input type="text" class="form-control" id="QueryDelay" placeholder="Jane Doe">
+              <label for="example1" class="form-label">Total Max Throughput (kbps):</label>
+              <input type="number" class="form-control" id="maxBW" placeholder="[1280-256000]" min="1280" max="256000" step="128">
             </div>
             <div class="form-group">
-              <label for="example2" class="form-label">User Max Throughput:</label>
-              <input type="email" class="form-control" id="ipaddr1" placeholder="jane.doe@example.com">
+              <label for="example2" class="form-label">User Max Throughput (kbps):</label>
+              <input type="number" class="form-control" id="maxUBW" placeholder="[64-64000]" min="128" max="64000" step="64">
             </div>
           </div>
           <div class="col-6">
           <div class="form-group">
-            <label for="example2" class="form-label">User Streaming Max Throughput:</label>
-            <input type="email" class="form-control" id="ipaddr2" placeholder="jane.doe@example.com">
+            <label for="example2" class="form-label">User Streaming Max Throughput (kbps):</label>
+            <input type="number" class="form-control" id="maxSBW" placeholder="[128-64000]" min="128" max="64000" step="64">
           </div>
           <div class="form-group">
-            <label for="example2" class="form-label">User Download Max Throughput:</label>
-            <input type="email" class="form-control" id="ipaddr3" placeholder="jane.doe@example.com">
+            <label for="example2" class="form-label">User Download Max Throughput (kbps):</label>
+            <input type="number" class="form-control" id="maxDBW" placeholder="[128-64000]" min="128" max="64000" step="64">
           </div>
+          </div>
+        </div>
+      </div>
+    </card>
+
+    <card cardTitle="Coinslot Settings" isCollapse="true">
+      <div class="form-group">
+        <div class="row">
+          <div class="col-6">
+              <label for="example1" class="form-label">Coin Input Delay (ms):</label>
+              <input type="number" class="form-control" id="coinInputDly" placeholder="[2000-8000]" min="2000" max="8000" step="250">
+              <label for="example2" class="form-label">Last Coin Delay (ms):</label>
+              <input type="number" class="form-control" id="coinAcceptDly" placeholder="[5000-20000]" min="5000" max="20000" step="500">
+              <label for="example2" class="form-label">Summarize amount per Day (php):</label>
+              <input type="number" class="form-control" id="dayamt" placeholder="[2-100]" min="2" max="100">
+          </div>
+          <div class="col-6">
+            <label for="example2" class="form-label">OK Button Delay (ms):</label>
+            <input type="number" class="form-control" id="okBtnDly" placeholder="[50-2000]" min="50" max="2000" step="50">
+            <label for="example2" class="form-label">Rate Minutes per Coin Pulse (min):</label>
+            <input type="number" class="form-control" id="rpm" placeholder="[1-120]" min="1" max="120" step="1">
           </div>
         </div>
       </div>
     </card>
   </div>
 </div>
-<card cardTitle="WLC File System Upload" isCollapse="true">
+<card cardTitle="File System Upload" isCollapse="true">
   <div class="row">
     <app-file-upload></app-file-upload>
   </div>
