@@ -5,6 +5,11 @@ export let MENU_ITEM = [
         icon: 'dashboard'
     },
     {
+        path: 'voucher',
+        title: 'Add Voucher',
+        icon: 'plus'
+    },
+    {
         path: 'device',
         title: 'Device Settings',
         icon: 'table'

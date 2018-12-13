@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardComponent } from './components/card/card.component';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { SwitchComponent } from './components/switch/switch.component';
+import { AlertComponent } from './components/alert/alert.component';
 
 import { JsonpModule } from '@angular/http';
 
@@ -17,7 +18,7 @@ import { TabContentComponent } from './components/tabset/tab-content/tab-content
 import { FileTreeComponent } from './components/file-tree/file-tree.component';
 
 import { PellEditorComponent } from './components/pell-editor/pell-editor.component';
-import { AlertComponent } from './components/alert/alert.component';
+
 import { WeatherComponent } from './components/weather/weather.component';
 import { ProfileCosmponent } from './components/profile/profile.component';
 */
@@ -33,7 +34,8 @@ import { ProfileCosmponent } from './components/profile/profile.component';
     CardComponent,
 //    FileUploadComponent,
     ProgressBarComponent,
-    SwitchComponent
+    SwitchComponent,
+    AlertComponent
     /*
     CardComponent,
     FileTreeComponent,
@@ -43,7 +45,7 @@ import { ProfileCosmponent } from './components/profile/profile.component';
     ProgressBarComponent,
     SwitchComponent,
     PellEditorComponent,
-    AlertComponent,
+
     WeatherComponent,
     ProfileComponent
     */
@@ -52,7 +54,8 @@ import { ProfileCosmponent } from './components/profile/profile.component';
     CardComponent,
 //    FileUploadComponent,
     ProgressBarComponent,
-    SwitchComponent
+    SwitchComponent,
+    AlertComponent
     /*
     CardComponent,
     FileTreeComponent,
