@@ -11,19 +11,21 @@ export class DashboardComponent implements OnInit{
   constructor() { }
 
   ngOnInit() {
-    this.drawChart('doughnut')
+    this.drawChart('doughnut', 'myChart', ["New", "In Progress", "On-Hold"], [10,12,8])
+    this.drawChart('line', 'expiredUsers', ["Jan-2018", "Feb-2018", "Mar-2018", "Apr-2018"], [30, 28, 24, 25]) 
   }
 
-  drawChart(chartType){
-    this.canvas = document.getElementById('myChart');
+  drawChart(chartType, chartTitle, labels, data){
+    this.canvas = document.getElementById(chartTitle);
     this.ctx = this.canvas.getContext('2d');
-    let myChart = new Chart(this.ctx, {
+    chartTitle = new Chart(this.ctx, {
       type: chartType,
       data: {
-          labels: ["New", "In Progress", "On Hold"],
+          labels: labels,
           datasets: [{
-              label: '# of Votes',
-              data: [1,2,3],
+              title: "Hotspot Users",
+              label: '',
+              data: data,
               backgroundColor: [
                   'rgba(255, 99, 132, 1)',
                   'rgba(54, 162, 235, 1)',
