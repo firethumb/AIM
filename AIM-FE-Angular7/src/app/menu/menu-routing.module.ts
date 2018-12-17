@@ -10,6 +10,7 @@ import { VoucherComponent } from './voucher/voucher.component';
 const routes: Routes = [
     { path: '', component: MenuComponent,
     children:[
+        { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
         { path:'log',component: LogComponent},
         { path:'device',component: DeviceComponent},
         { path:'dashboard',component: DashboardComponent},

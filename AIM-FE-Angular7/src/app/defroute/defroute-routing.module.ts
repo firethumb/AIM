@@ -9,6 +9,7 @@ import { AboutusComponent } from './aboutus/aboutus.component';
 const routes: Routes = [
     { path: '', component: DefrouteComponent,
     children:[
+        { path: '', redirectTo: 'home', pathMatch: 'full' },
         { path: 'home', loadChildren: './home/home.module#HomeModule' },
         { path:'product',component: ProductComponent},
         { path:'license',component: LicenseComponent},
