@@ -125,7 +125,7 @@
       </div>
     </card>
 
-    <card cardTitle="Coinslot Settings" isCollapse="true">
+    <card cardTitle="Coin Slot Settings" isCollapse="true">
       <div class="form-group">
         <div class="row">
           <div class="col-6">
@@ -133,7 +133,7 @@
               <input type="number" class="form-control" id="coinInputDly" placeholder="[2000-8000]" min="2000" max="8000" step="250">
               <label for="example2" class="form-label">Last Coin Delay (ms):</label>
               <input type="number" class="form-control" id="coinAcceptDly" placeholder="[5000-20000]" min="5000" max="20000" step="500">
-              <label for="example2" class="form-label">Summarize amount per Day (php):</label>
+              <label for="example2" class="form-label">One Day Rate (php):</label>
               <input type="number" class="form-control" id="dayamt" placeholder="[2-100]" min="2" max="100">
           </div>
           <div class="col-6">
@@ -141,6 +141,40 @@
             <input type="number" class="form-control" id="okBtnDly" placeholder="[50-2000]" min="50" max="2000" step="50">
             <label for="example2" class="form-label">Rate Minutes per Coin Pulse (min):</label>
             <input type="number" class="form-control" id="rpm" placeholder="[1-120]" min="1" max="120" step="1">
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-12">
+            <card cardTitle="Multi Coin Slot Parameters" isCollapse="true">
+                <div class="row">
+                  <div class="col-11">
+                    <label for="example2" class="form-label">X1 pulse value:</label>
+                    <input type="number" class="form-control" id="x1" placeholder="[1-100]" min="1" max="100" step="1">
+                  </div>
+                  <div class="col-1">
+                    <switch switchName="multiple" switchId="multiple1" multiple [checked]="true"></switch>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-11">
+                    <label for="example2" class="form-label">X2 pulse value:</label>
+                    <input type="number" class="form-control" id="x2" placeholder="[1-100]" min="1" max="100" step="1">
+                  </div>
+                  <div class="col-1">
+                    <switch switchName="multiple" switchId="multiple2" theme="success" multiple [checked]="true"></switch>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-11">
+                    <label for="example2" class="form-label">X3 pulse value:</label>
+                    <input type="number" class="form-control" id="x3" placeholder="[1-100]" min="1" max="100" step="1">
+                  </div>
+                  <div class="col-1">
+                    <switch switchName="multiple" switchId="multiple3" theme="warning" multiple [checked]="true"></switch>
+                  </div>
+                </div>
+            </card>
           </div>
         </div>
       </div>
