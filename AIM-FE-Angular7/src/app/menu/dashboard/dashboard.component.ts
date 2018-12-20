@@ -13,6 +13,7 @@ export class DashboardComponent implements OnInit{
   ngOnInit() {
     this.drawChart('doughnut', 'myChart', ["New", "In Progress", "On-Hold"], [10,12,8])
     this.drawChart('line', 'expiredUsers', ["Jan-2018", "Feb-2018", "Mar-2018", "Apr-2018"], [30, 28, 24, 25]) 
+    this.drawChart('bar', 'bandWidthUtil', ["data1", "data2", "data3"], [10,12,8])
   }
 
   drawChart(chartType, chartTitle, labels, data){
@@ -36,7 +37,8 @@ export class DashboardComponent implements OnInit{
       },
       options: {
         responsive: false,
-        display:true
+        display:true,
+        
       }
     });
   }
