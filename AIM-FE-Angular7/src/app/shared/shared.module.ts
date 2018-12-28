@@ -6,6 +6,8 @@ import { CardComponent } from './components/card/card.component';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { SwitchComponent } from './components/switch/switch.component';
 import { AlertComponent } from './components/alert/alert.component';
+import { Prodcard1Component } from './components/prodcard1/prodcard1.component';
+import { Prodcard2Component } from './components/prodcard2/prodcard2.component';
 
 import { JsonpModule } from '@angular/http';
 

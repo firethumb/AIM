@@ -7,6 +7,8 @@ import { HeaderComponent } from './header/header.component';
 import { ProductComponent } from './product/product.component';
 import { LicenseComponent } from './license/license.component';
 import { AboutusComponent } from './aboutus/aboutus.component';
+import { PdetailsComponent } from './pdetails/pdetails.component';
+
 
 @NgModule({
   imports: [
@@ -16,9 +18,10 @@ import { AboutusComponent } from './aboutus/aboutus.component';
   declarations: [
     DefrouteComponent,
     HeaderComponent,
-    ProductComponent,
     LicenseComponent,
-    AboutusComponent
+    AboutusComponent,
+    ProductComponent,
+    PdetailsComponent
   ]
 })
 export class DefrouteModule { }
