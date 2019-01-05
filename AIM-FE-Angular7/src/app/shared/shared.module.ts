@@ -7,7 +7,6 @@ import { ProgressBarComponent } from './components/progress-bar/progress-bar.com
 import { SwitchComponent } from './components/switch/switch.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { Prodcard1Component } from './components/prodcard1/prodcard1.component';
-import { Prodcard2Component } from './components/prodcard2/prodcard2.component';
 
 import { JsonpModule } from '@angular/http';
 
@@ -37,7 +36,8 @@ import { ProfileCosmponent } from './components/profile/profile.component';
 //    FileUploadComponent,
     ProgressBarComponent,
     SwitchComponent,
-    AlertComponent
+    AlertComponent,
+    Prodcard1Component
     /*
     CardComponent,
     FileTreeComponent,
@@ -57,7 +57,8 @@ import { ProfileCosmponent } from './components/profile/profile.component';
 //    FileUploadComponent,
     ProgressBarComponent,
     SwitchComponent,
-    AlertComponent
+    AlertComponent,
+    Prodcard1Component
     /*
     CardComponent,
     FileTreeComponent,

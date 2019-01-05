@@ -1,4 +1,4 @@
-export let MENU_ITEM = [
+export let DEVICE_ITEM = [
     {
         path: 'device1',
         title: 'Device1',

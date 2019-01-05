@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MENU_ITEM } from '../../menu/sidebar-device';
+import { DEVICE_ITEM } from '../../menu/sidebar-device';
 import { Router } from '@angular/router';
 import { GlobalService } from './global.service';
 
@@ -7,7 +7,7 @@ import { GlobalService } from './global.service';
 export class deviceService {
 
   constructor(public _globalService: GlobalService, private _router: Router) {
-    this.getNodePath(MENU_ITEM);
+    this.getNodePath(DEVICE_ITEM);
   }
 
   private parent_node = null;
@@ -44,7 +44,7 @@ export class deviceService {
   protected creatRouterLink(nodeId: any) {
     this.node = null;
     this.parent_node = null;
-    const menuObj = this.queryParentNode(MENU_ITEM, nodeId);
+    const menuObj = this.queryParentNode(DEVICE_ITEM, nodeId);
     if (menuObj.parent_node && menuObj.parent_node.path) {
       this.path_item.unshift(menuObj.parent_node.path);
       return this.creatRouterLink(menuObj.parent_node.path);
@@ -68,7 +68,7 @@ export class deviceService {
   }
 
   public putSidebarJson() {
-    return MENU_ITEM;
+    return DEVICE_ITEM;
   }
 
   public selectItem(item) {
