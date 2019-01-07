@@ -1,24 +1,13 @@
-<div class="card-deck d-md-flex flex-md-equal w-100 my-md-3 pl-md-3">
-  <div class="card" style="width: 20rem;">
-    <img class="card-img-top" src="{{pdata[0].imgsrc[0]}}" alt="Card image cap">
+<div class="card-deck d-md-flex flex-md-equal w-100 my-md-3 pl-md-3" *ngFor="let rowd of rowarry">
+  <div class="card" style="width: 20rem;" *ngFor="let itmx of rowd">
+    <img class="card-img-top" src="{{itmx.imgsrc[0]}}" alt="Card image cap">
     <div class="card-block">
-      <h4 class="card-title">{{pdata[0].ctitle}}</h4>
-      <p class="card-text">{{pdata[0].desc}}</p>
+      <h4 class="card-title">{{itmx.ctitle}}</h4>
+      <p class="card-text">{{itmx.desc}}</p>
     </div>
     <div class="card-footer">
       <small class="text-muted">Last updated 3 mins ago</small>
-      <a href="{{pdata[0].link}}" class="btn btn-primary float-right">Click here for more details</a>
-    </div>
-  </div>
-  <div class="card" style="width: 20rem;">
-    <img class="card-img-top" src="assets/product-picks/3.jpg" alt="Card image cap">
-    <div class="card-block">
-      <h4 class="card-title">Card title</h4>
-      <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-    </div>
-    <div class="card-footer ">
-      <small class="text-muted">Last updated 3 mins ago</small>
-      <a href="default/product/id2" class="btn btn-primary float-right">Click here for more details</a>
+      <a href="{{itmx.link}}" class="btn btn-primary float-right">Click here for more details</a>
     </div>
   </div>
 </div>
