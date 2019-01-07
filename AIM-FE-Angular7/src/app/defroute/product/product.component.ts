@@ -7,7 +7,7 @@ import 'bootstrap';
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit {
-
+  pagecssvar:any="container pt-md-5 pb-md-4 text-center"
   constructor() { }
 
   ngOnInit() {

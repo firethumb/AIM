@@ -1,13 +1,15 @@
-<div class="card-deck d-md-flex flex-md-equal w-100 my-md-3 pl-md-3" *ngFor="let rowd of rowarry">
-  <div class="card" style="width: 20rem;" *ngFor="let itmx of rowd">
-    <img class="card-img-top" src="{{itmx.imgsrc[0]}}" alt="Card image cap">
-    <div class="card-block">
-      <h4 class="card-title">{{itmx.ctitle}}</h4>
-      <p class="card-text">{{itmx.desc}}</p>
-    </div>
-    <div class="card-footer">
-      <small class="text-muted">Last updated 3 mins ago</small>
-      <a href="{{itmx.link}}" class="btn btn-primary float-right">Click here for more details</a>
+<div class="card-deck d-md-flex flex-md-equal w-100" *ngFor="let rowd of rowarry">
+  <div class="card m-md-3" *ngFor="let itmx of rowd">
+    <div *ngIf="itmx">
+      <img class="card-img-top" src="{{itmx.imgsrc[0]}}" alt="Card image cap">
+      <div class="card-block">
+        <h4 class="card-title">{{itmx.ctitle}}</h4>
+        <p class="card-text">{{itmx.desc}}</p>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">Last updated 3 mins ago</small>
+        <a href="{{itmx.link}}" class="btn btn-primary float-right">Click here for more details</a>
+      </div>
     </div>
   </div>
 </div>
