@@ -1,6 +1,10 @@
 AIM-Rpi-Mikronode-ng/
 AIM-Rpi-Mikronode-ng/**
 AIM-Rpi-Mikronode-ng
+AIM-Blueapple
+AIM-Blueapple/**
+AIM-Loopback
+AIM-Loopback/**
 dist
 test
 .vscode

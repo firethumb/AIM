@@ -6,10 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
-
+  model: any = {};
   constructor() { }
 
   ngOnInit() {
   }
-
+  fn_signup() {
+    console.log('SignUp!!!!');
+    //this.authenticationService.login(this.model.username, this.model.password);
+  }
 }
