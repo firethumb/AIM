@@ -11,13 +11,15 @@
           <input type="text" placeholder="Email" class="form-control input-underline input-lg" name="email" [(ngModel)]="model.email" #email="ngModel" required />
           <div *ngIf="f.submitted && !email.valid" class="help-block">Email is required</div>
         </div>
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid}">
           <input type="password" placeholder="Password" class="form-control input-underline input-lg" name="password" [(ngModel)]="model.password" #password="ngModel" required />
-          <div *ngIf="f.submitted && !password.valid" class="help-block">Password is required</div>
+          <div *ngIf="f.submitted && !password.valid" class="help-block">Password is required.</div>
+          <div *ngIf="f.submitted && !(model.password == model.cpassword)" class="help-block">Password not Match!</div>
         </div>
-        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !cpassword.valid }">
+        <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !cpassword.valid}">
           <input type="password" placeholder="Confirm password" class="form-control input-underline input-lg" name="cpassword" [(ngModel)]="model.cpassword" #cpassword="ngModel" required />
           <div *ngIf="f.submitted && !cpassword.valid" class="help-block">Retype Password</div>
+          <div *ngIf="f.submitted && !(model.password == model.cpassword)" class="help-block">Password not Match!</div>
         </div>
 
         <div class="checkbox mb-3">
