@@ -5,8 +5,8 @@
         <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
         <br>
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
-          <input type="text" placeholder="Username" class="form-control input-underline input-lg" name="username" [(ngModel)]="model.username" #username="ngModel" required />
-          <div *ngIf="f.submitted && !username.valid" class="help-block">Username is required</div>
+          <input type="text" placeholder="Username or Email" class="form-control input-underline input-lg" name="username" [(ngModel)]="model.username" #username="ngModel" required />
+          <div *ngIf="f.submitted && !username.valid" class="help-block">Username or Email is required</div>
         </div>
         <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
           <input type="password" placeholder="Password" class="form-control input-underline input-lg" name="password" [(ngModel)]="model.password" #password="ngModel" required />

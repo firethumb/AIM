@@ -75,3 +75,4 @@ import { ProfileCosmponent } from './components/profile/profile.component';
   ]
 })
 export class SharedModule { }
+export * from './auth-guard/auth.guard';
